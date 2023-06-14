@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="editTextPost" type="id">@+id/editTextPost</item>
+    <item name="buttonPost" type="id">@+id/buttonPost</item>
+    <item name="textViewUserEmail" type="id">@+id/textViewUserEmail</item>
+    <item name="buttonLogout" type="id">@+id/buttonLogout</item>
+</resources>

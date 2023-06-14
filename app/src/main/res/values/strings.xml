@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">OtakuVerse</string>
+    <string name="senha">Senha</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="name">Nome</string>
+    <string name="password">Senha</string>
+    <string name="register">Registrar</string>
+    <string name="register_activity_title">Título da atividade de registro</string>
+    <string name="home_activity_label">Label da atividade principal</string>
+    <string name="digite_sua_postagem">Digite sua postagem</string>
+    <string name="postar">Postar</string>
+    <string name="logout">Logout</string>
+</resources>
