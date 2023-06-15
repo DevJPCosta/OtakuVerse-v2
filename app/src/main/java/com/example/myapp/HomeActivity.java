@@ -5,16 +5,27 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Date;
+import java.util.Objects;
 
 public class HomeActivity extends Activity {
 
     private FirebaseAuth mAuth;
     private TextView textViewUserEmail;
     private Button buttonLogout;
+    private EditText editTextPost;
+    private Button buttonCreatePost;
+
+    private DatabaseReference postsRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +33,10 @@ public class HomeActivity extends Activity {
         setContentView(R.layout.activity_home);
 
         mAuth = FirebaseAuth.getInstance();
-        textViewUserEmail = (TextView) findViewById(R.id.textViewUserEmail);
-        buttonLogout = (Button) findViewById(R.id.buttonLogout);
+        textViewUserEmail = findViewById(R.id.textViewUserEmail);
+        buttonLogout = findViewById(R.id.buttonLogout);
+        editTextPost = findViewById(R.id.editTextPost);
+        buttonCreatePost = findViewById(R.id.buttonCreatePost);
 
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -32,15 +45,21 @@ public class HomeActivity extends Activity {
             }
         });
 
-        // Obter o usuário atual do Firebase
+        buttonCreatePost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createPost();
+            }
+        });
+
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            // O usuário está logado, exiba o e-mail na TextView
             textViewUserEmail.setText(currentUser.getEmail());
         } else {
-            // O usuário não está logado, redirecione para a MainActivity ou realize alguma outra ação
             redirectToMainActivity();
         }
+
+        postsRef = FirebaseDatabase.getInstance().getReference("posts");
     }
 
     private void logoutUser() {
@@ -49,8 +68,30 @@ public class HomeActivity extends Activity {
     }
 
     private void redirectToMainActivity() {
-        // Redirecionar para a MainActivity
         startActivity(new Intent(HomeActivity.this, MainActivity.class));
-        finish(); // Finalizar a HomeActivity para que o usuário não possa voltar pressionando o botão "Voltar"
+        finish();
+    }
+
+    private void createPost() {
+        String postContent = editTextPost.getText().toString().trim();
+
+        if (!postContent.isEmpty()) {
+            String postId = postsRef.push().getKey();
+            String author = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
+            Date currentDate = new Date();
+
+            Post newPost = new Post(postId, postContent, author, currentDate);
+
+            postsRef.child(postId).setValue(newPost);
+
+            showToast("Post criado com sucesso");
+            editTextPost.setText("");
+        } else {
+            showToast("Digite o conteúdo do post");
+        }
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

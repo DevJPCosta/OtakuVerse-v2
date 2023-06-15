@@ -3,10 +3,14 @@ package com.example.myapp;
 import java.util.Date;
 
 public class Post {
-    private final String postId; // ID único do post
-    private final String content;
-    private final String author;
-    private final Date date;
+    private String postId; // ID único do post
+    private String content;
+    private String author;
+    private Date date;
+
+    public Post() {
+        // Construtor vazio necessário para o Firebase Database
+    }
 
     public Post(String postId, String content, String author, Date date) {
         this.postId = postId;
@@ -29,9 +33,5 @@ public class Post {
 
     public Date getDate() {
         return date;
-    }
-
-    public char getTitle() {
-        return 0;
     }
 }

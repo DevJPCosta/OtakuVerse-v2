@@ -9,20 +9,24 @@
         android:id="@+id/editTextName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/name" />
+        android:hint="@string/name"
+        android:minHeight="48dp"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/editTextEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/email" />
+        android:hint="@string/email"
+        android:minHeight="48dp" />
 
     <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/password"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:minHeight="48dp" />
 
     <Button
         android:id="@+id/buttonRegister"

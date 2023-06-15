@@ -32,9 +32,9 @@ public class FeedActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed);
 
-        listView = (ListView) findViewById(R.id.listView);
-        editTextPost = (EditText) findViewById(R.id.editTextPost);
-        buttonPost = (Button) findViewById(R.id.buttonPost);
+        listView = findViewById(R.id.listView);
+        editTextPost = findViewById(R.id.editTextPost);
+        buttonPost = findViewById(R.id.buttonPost);
 
         postList = new ArrayList<>(); // Inicialmente, a lista de posts está vazia
 

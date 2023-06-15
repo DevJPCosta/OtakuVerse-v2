@@ -4,4 +4,5 @@
     <item name="buttonPost" type="id">@+id/buttonPost</item>
     <item name="textViewUserEmail" type="id">@+id/textViewUserEmail</item>
     <item name="buttonLogout" type="id">@+id/buttonLogout</item>
+    <item name="buttonCreateAccount" type="id">@+id/buttonCreateAccount</item>
 </resources>

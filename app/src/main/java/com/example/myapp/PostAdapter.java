@@ -38,12 +38,11 @@ public class PostAdapter extends ArrayAdapter<Post> {
         Post currentPost = postList.get(position);
 
         // Configure as views do item do feed com os dados do post
-        TextView textViewTitle = (TextView) itemView.findViewById(R.id.textViewTitle);
         TextView textViewContent = (TextView) itemView.findViewById(R.id.textViewContent);
         TextView textViewAuthor = (TextView) itemView.findViewById(R.id.textViewAuthor);
         TextView textViewDate = (TextView) itemView.findViewById(R.id.textViewDate);
 
-        textViewTitle.setText(currentPost.getTitle());
+
         textViewContent.setText(currentPost.getContent());
         textViewAuthor.setText(currentPost.getAuthor());
         textViewDate.setText(formatDate(currentPost.getDate()));

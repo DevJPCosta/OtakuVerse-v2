@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -20,6 +22,7 @@ public class MainActivity extends Activity {
     private EditText editTextEmail;
     private EditText editTextPassword;
     private Button buttonLogin;
+    private Button buttonCreateAccount;
     private FirebaseAuth mAuth;
     private AuthStateListener mAuthListener;
 
@@ -30,9 +33,10 @@ public class MainActivity extends Activity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        buttonLogin = (Button) findViewById(R.id.buttonLogin);
+        editTextEmail = findViewById(R.id.editTextEmail);
+        editTextPassword = findViewById(R.id.editTextPassword);
+        buttonLogin = findViewById(R.id.buttonLogin);
+        buttonCreateAccount = findViewById(R.id.buttonCreateAccount);
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,10 +48,17 @@ public class MainActivity extends Activity {
             }
         });
 
+        buttonCreateAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openRegistrationActivity();
+            }
+        });
+
         // Configurar o listener de autenticação do Firebase
         mAuthListener = new AuthStateListener() {
             @Override
-            public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // Usuário autenticado com sucesso
@@ -75,10 +86,15 @@ public class MainActivity extends Activity {
     }
 
     private void authenticateUser(String email, String password) {
+        if (email.isEmpty() || password.isEmpty()) {
+            showToast("Preencha todos os campos");
+            return;
+        }
+
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(Task<AuthResult> task) {
+                    public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Autenticação bem-sucedida
                             showToast("Login realizado com sucesso");
@@ -93,6 +109,11 @@ public class MainActivity extends Activity {
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void openRegistrationActivity() {
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
     }
 
     private void navigateToHomeScreen() {
