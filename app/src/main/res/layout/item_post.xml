@@ -37,6 +37,12 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/buttonViewPost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ver_post" />
+
+        <Button
             android:id="@+id/buttonComment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,37 +52,22 @@
             android:id="@+id/textViewLikes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/_0_curtidas"
-            android:textSize="12sp"
             android:paddingLeft="8dp"
-            android:paddingRight="8dp" />
+            android:paddingRight="8dp"
+            android:text="@string/_0_curtidas"
+            android:textColor="#90A4AE"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/textViewDislikes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/_0_descurtidas"
-            android:textSize="12sp"
             android:paddingLeft="8dp"
-            android:paddingRight="8dp" />
+            android:paddingRight="8dp"
+            android:text="@string/_0_descurtidas"
+            android:textColor="#F06292"
+            android:textSize="12sp" />
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/textViewComments"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/coment_rios"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:paddingTop="8dp" />
-
-    <ListView
-        android:id="@+id/listViewComments"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:paddingTop="8dp" />
 
 </LinearLayout>

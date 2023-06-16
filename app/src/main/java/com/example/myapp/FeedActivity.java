@@ -1,14 +1,21 @@
 package com.example.myapp;
 
-import android.app.Activity;
+import android.app.ListActivity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,9 +27,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class FeedActivity extends Activity {
+public class FeedActivity extends ListActivity {
 
-    private ListView listView;
     private List<Post> postList;
     private PostAdapter adapter;
 
@@ -36,13 +42,12 @@ public class FeedActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed);
 
-        listView = findViewById(R.id.listView);
         editTextPost = findViewById(R.id.editTextPost);
         buttonPost = findViewById(R.id.buttonPost);
 
         postList = new ArrayList<>();
         adapter = new PostAdapter(this, postList);
-        listView.setAdapter(adapter);
+        setListAdapter(adapter);
 
         postsRef = FirebaseDatabase.getInstance().getReference("posts");
 
@@ -100,5 +105,78 @@ public class FeedActivity extends Activity {
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void openPostActivity(Post post) {
+        Intent intent = new Intent(this, PostActivity.class);
+        intent.putExtra("postId", post.getPostId());
+        intent.putExtra("postTitle", post.getTitle());
+        intent.putExtra("postContent", post.getContent());
+        // Adicione outros dados necessários
+        // ...
+
+        startActivity(intent);
+    }
+
+    private static class ViewHolder {
+        TextView textViewTitle;
+        TextView textViewContent;
+        TextView textViewAuthor;
+        TextView textViewDate;
+        TextView textViewLikes;
+        TextView textViewDislikes;
+        Button buttonComment;
+        ListView listViewComments;
+        Button buttonDelete;
+        Button buttonViewPost;
+    }
+
+
+    public class PostAdapter extends ArrayAdapter<Post> {
+
+        public PostAdapter(@NonNull Context context, List<Post> postList) {
+            super(context, 0, postList);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            ViewHolder holder;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_post, parent, false);
+                holder = new ViewHolder();
+                holder.textViewTitle = convertView.findViewById(R.id.textViewTitle);
+                holder.textViewContent = convertView.findViewById(R.id.textViewContent);
+                holder.textViewAuthor = convertView.findViewById(R.id.textViewAuthor);
+                holder.textViewDate = convertView.findViewById(R.id.textViewDate);
+                holder.textViewLikes = convertView.findViewById(R.id.textViewLikes);
+                holder.textViewDislikes = convertView.findViewById(R.id.textViewDislikes);
+                holder.buttonComment = convertView.findViewById(R.id.buttonComment);
+                holder.listViewComments = convertView.findViewById(R.id.listViewComments);
+                holder.buttonDelete = convertView.findViewById(R.id.buttonDelete);
+                holder.buttonViewPost = convertView.findViewById(R.id.buttonViewPost);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            // Resto do código...
+
+            // Configura o listener de clique para o botão de visualizar postagem
+            holder.buttonViewPost.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Obtém o post atual
+                    Post currentPost = getItem(position);
+
+                    // Chama o método para abrir a tela de exibição do post
+                    openPostActivity(currentPost);
+                }
+            });
+
+            // Resto do código...
+
+            return convertView;
+        }
     }
 }

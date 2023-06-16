@@ -8,9 +8,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,11 +28,15 @@ public class PostAdapter extends ArrayAdapter<Post> {
 
     private final Context context;
     private final List<Post> postList;
+    private final FirebaseAuth firebaseAuth;
+    private final FirebaseFirestore firestore;
 
     public PostAdapter(Context context, List<Post> postList) {
         super(context, 0, postList);
         this.context = context;
         this.postList = postList;
+        this.firebaseAuth = FirebaseAuth.getInstance();
+        this.firestore = FirebaseFirestore.getInstance();
     }
 
     @NonNull
@@ -43,6 +54,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
             holder.textViewDislikes = convertView.findViewById(R.id.textViewDislikes);
             holder.buttonComment = convertView.findViewById(R.id.buttonComment);
             holder.listViewComments = convertView.findViewById(R.id.listViewComments);
+            holder.buttonDelete = convertView.findViewById(R.id.buttonDelete);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -84,11 +96,56 @@ public class PostAdapter extends ArrayAdapter<Post> {
             holder.listViewComments.setLayoutParams(layoutParams);
         }
 
+        // Verifica se o autor do post é o mesmo que o usuário atualmente logado
+        String currentUserId = firebaseAuth.getCurrentUser().getUid();
+        String postAuthorId = currentPost.getAuthorId();
+        if (currentUserId.equals(postAuthorId)) {
+            // O usuário atual é o autor do post, exibe o botão de exclusão
+            holder.buttonDelete.setVisibility(View.VISIBLE);
+        } else {
+            // O usuário atual não é o autor do post, esconde o botão de exclusão
+            holder.buttonDelete.setVisibility(View.GONE);
+        }
+
+        // Configura o listener de clique para o botão de exclusão
+        holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Chama o método para excluir o post
+                deletePost(currentPost);
+            }
+        });
+
         // Restante do código...
 
         return convertView;
     }
 
+    private void deletePost(Post post) {
+        // Remove o post da lista de posts
+        postList.remove(post);
+        notifyDataSetChanged();
+
+        // Obtém a referência do documento do post no Firestore
+        DocumentReference postRef = firestore.collection("posts").document(post.getPostId());
+
+        // Exclui o documento do post
+        postRef.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Sucesso ao excluir o post
+                        Toast.makeText(context, "Post excluído com sucesso", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Falha ao excluir o post
+                        Toast.makeText(context, "Falha ao excluir o post", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 
     private String formatDate(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
@@ -104,5 +161,6 @@ public class PostAdapter extends ArrayAdapter<Post> {
         TextView textViewDislikes;
         Button buttonComment;
         ListView listViewComments;
+        Button buttonDelete;
     }
 }

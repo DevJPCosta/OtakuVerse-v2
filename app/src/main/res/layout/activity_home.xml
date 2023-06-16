@@ -15,7 +15,10 @@
         android:id="@+id/editTextPost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/digite_o_conte_do_do_post" />
+        android:autofillHints=""
+        android:hint="@string/digite_o_conte_do_do_post"
+        android:minHeight="48dp"
+        android:textColorHint="#B39DDB" />
 
     <Button
         android:id="@+id/buttonCreatePost"

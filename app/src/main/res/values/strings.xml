@@ -21,4 +21,8 @@
     <string name="ver_feed">Ver Feed</string>
     <string name="_0_curtidas">0 curtidas</string>
     <string name="_0_descurtidas">0 descurtidas</string>
+    <string name="excluir">excluir</string>
+    <string name="todo">TODO</string>
+    <string name="ver_postagem">Ver Postagem</string>
+    <string name="ver_post">Ver Post</string>
 </resources>

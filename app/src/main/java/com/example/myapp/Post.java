@@ -26,6 +26,7 @@ public class Post {
         this.date = date;
         this.comments = new ArrayList<>();
         this.likes = new ArrayList<>();
+        this.dislikes = new ArrayList<>();
         this.discussions = new ArrayList<>();
     }
 
@@ -91,5 +92,15 @@ public class Post {
         } else {
             discussions.add(userId);
         }
+    }
+
+    public String getAuthorId() {
+        // Aqui você pode retornar o ID do autor com base em alguma lógica específica,
+        // como um campo adicional no objeto Post ou qualquer outra fonte de dados.
+        // Por exemplo, se o ID do autor estiver sendo armazenado em um campo separado,
+        // você pode retorná-lo da seguinte maneira:
+        // return authorId;
+        // Se o ID do autor for o mesmo que o próprio autor, você pode retornar o ID da seguinte maneira:
+        return author;
     }
 }

@@ -11,7 +11,8 @@
         android:layout_height="100dp"
         android:src="@drawable/imageuser"
         android:scaleType="centerCrop"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@string/todo" />
 
     <TextView
         android:id="@+id/textViewName"

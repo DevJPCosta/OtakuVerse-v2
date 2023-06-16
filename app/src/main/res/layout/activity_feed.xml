@@ -8,7 +8,8 @@
         android:id="@+id/editTextPost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/digite_sua_postagem" />
+        android:hint="@string/digite_sua_postagem"
+        android:textColorHint="#8C9EFF" />
 
     <Button
         android:id="@+id/buttonPost"
@@ -16,10 +17,18 @@
         android:layout_height="wrap_content"
         android:text="@string/postar" />
 
+    <Button
+        android:id="@+id/buttonViewPost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ver_postagem" />
+
+
     <ListView
-        android:id="@+id/listView"
+        android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
+
 
 </LinearLayout>

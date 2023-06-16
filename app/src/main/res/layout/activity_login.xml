@@ -9,14 +9,18 @@
         android:id="@+id/editTextEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/email" />
+        android:hint="@string/email"
+        android:minHeight="48dp"
+        android:textColorHint="#B39DDB" />
 
     <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/senha"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        android:textColorHint="#B0BEC5" />
 
     <Button
         android:id="@+id/buttonLogin"

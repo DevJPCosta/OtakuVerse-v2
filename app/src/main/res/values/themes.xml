@@ -1,3 +1,10 @@
-<resources>
-    <style name="Theme.MyApp" parent="android:Theme.Material.Light.NoActionBar" />
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+        <style name="Theme.MyApp" parent="android:Theme.Material.Light.NoActionBar">
+            <!-- Outros atributos do tema -->
+
+            <!-- Atributo para definir a imagem de fundo -->
+            <item name="android:windowBackground">@drawable/fundoapp</item>
+        </style>
+
+
 </resources>

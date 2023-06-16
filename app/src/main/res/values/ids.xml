@@ -5,4 +5,10 @@
     <item name="textViewUserEmail" type="id">@+id/textViewUserEmail</item>
     <item name="buttonLogout" type="id">@+id/buttonLogout</item>
     <item name="buttonCreateAccount" type="id">@+id/buttonCreateAccount</item>
+    <item name="textViewPostAuthor" type="id">@+id/textViewPostAuthor</item>
+    <item name="textViewPostContent" type="id">@+id/textViewPostContent</item>
+    <item name="textViewPostTitle" type="id">@+id/textViewPostTitle</item>
+    <item name="listViewComments" type="id">@+id/listViewComments</item>
+    <item name="listView" type="id">@+id/listView</item>
+    <item name="buttonDelete" type="id">@+id/buttonDelete</item>
 </resources>
