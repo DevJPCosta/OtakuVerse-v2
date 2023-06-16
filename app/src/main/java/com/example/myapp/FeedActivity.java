@@ -8,6 +8,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -65,6 +67,7 @@ public class FeedActivity extends Activity {
 
             Post newPost = new Post(postId, postContent, author, currentDate);
 
+            assert postId != null;
             postsRef.child(postId).setValue(newPost);
 
             showToast("Postagem realizada com sucesso");
@@ -77,7 +80,7 @@ public class FeedActivity extends Activity {
     private void loadPosts() {
         postsRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 postList.clear();
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
@@ -89,7 +92,7 @@ public class FeedActivity extends Activity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 showToast("Falha ao carregar os posts: " + databaseError.getMessage());
             }
         });

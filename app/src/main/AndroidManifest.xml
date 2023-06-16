@@ -43,8 +43,16 @@
         <!-- Outras atividades aqui -->
 
         <activity
-            android:name=".UserProfile"
+            android:name=".CommentAdapter"
             android:theme="@style/Theme.MyApp" />
+        <activity
+            android:name=".PostAdapter"
+            android:theme="@style/Theme.MyApp" />
+
+        <activity
+            android:name=".UserProfileActivity"
+            android:theme="@style/Theme.MyApp" />
+
 
     </application>
 

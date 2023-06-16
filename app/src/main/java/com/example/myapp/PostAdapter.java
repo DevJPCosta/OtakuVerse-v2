@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,7 +16,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
 public class PostAdapter extends ArrayAdapter<Post> {
+
     private final Context context;
     private final List<Post> postList;
 
@@ -28,58 +31,78 @@ public class PostAdapter extends ArrayAdapter<Post> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View itemView = convertView;
-        if (itemView == null) {
-            itemView = LayoutInflater.from(context).inflate(R.layout.item_post, parent, false);
+        ViewHolder holder;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_post, parent, false);
+            holder = new ViewHolder();
+            holder.textViewTitle = convertView.findViewById(R.id.textViewTitle);
+            holder.textViewContent = convertView.findViewById(R.id.textViewContent);
+            holder.textViewAuthor = convertView.findViewById(R.id.textViewAuthor);
+            holder.textViewDate = convertView.findViewById(R.id.textViewDate);
+            holder.textViewLikes = convertView.findViewById(R.id.textViewLikes);
+            holder.textViewDislikes = convertView.findViewById(R.id.textViewDislikes);
+            holder.buttonComment = convertView.findViewById(R.id.buttonComment);
+            holder.listViewComments = convertView.findViewById(R.id.listViewComments);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
         // Obtenha o post atual
-        final Post currentPost = postList.get(position);
+        Post currentPost = postList.get(position);
 
         // Configure as views do item do feed com os dados do post
-        TextView textViewContent = itemView.findViewById(R.id.textViewContent);
-        TextView textViewAuthor = itemView.findViewById(R.id.textViewAuthor);
-        TextView textViewDate = itemView.findViewById(R.id.textViewDate);
+        if (holder.textViewTitle != null) {
+            holder.textViewTitle.setText(currentPost.getTitle());
+        }
+        if (holder.textViewContent != null) {
+            holder.textViewContent.setText(currentPost.getContent());
+        }
+        if (holder.textViewAuthor != null) {
+            holder.textViewAuthor.setText(currentPost.getAuthor());
+        }
+        if (holder.textViewDate != null) {
+            holder.textViewDate.setText(formatDate(currentPost.getDate()));
+        }
+        if (holder.textViewLikes != null) {
+            holder.textViewLikes.setText(currentPost.getLikes() + " curtidas");
+        }
+        if (holder.textViewDislikes != null) {
+            holder.textViewDislikes.setText(currentPost.getDislikes() + " descurtidas");
+        }
 
-        textViewContent.setText(currentPost.getContent());
-        textViewAuthor.setText(currentPost.getAuthor());
-        textViewDate.setText(formatDate(currentPost.getDate()));
+        // Configure o adaptador do ListView de comentários
+        if (holder.listViewComments != null && currentPost.getComments() != null) {
+            CommentAdapter commentAdapter = new CommentAdapter(context, currentPost.getComments());
+            holder.listViewComments.setAdapter(commentAdapter);
 
-        // Botão de comentar
-        Button buttonComment = itemView.findViewById(R.id.buttonComment);
-        buttonComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Lógica para lidar com o clique no botão de comentar
-                // Implemente a funcionalidade desejada, como abrir uma tela de comentários
-            }
-        });
+            // Defina o tamanho máximo de exibição dos itens do ListView de comentários
+            int desiredItemHeight = context.getResources().getDimensionPixelSize(R.dimen.comment_item_height);
+            int totalHeight = desiredItemHeight * currentPost.getComments().size();
+            ViewGroup.LayoutParams layoutParams = holder.listViewComments.getLayoutParams();
+            layoutParams.height = totalHeight;
+            holder.listViewComments.setLayoutParams(layoutParams);
+        }
 
-        // Botão de curtir
-        Button buttonLike = itemView.findViewById(R.id.buttonLike);
-        buttonLike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Lógica para lidar com o clique no botão de curtir
-                // Implemente a funcionalidade desejada, como adicionar/remover a curtida da postagem
-            }
-        });
+        // Restante do código...
 
-        // Botão de discutir
-        Button buttonDiscuss = itemView.findViewById(R.id.buttonDiscuss);
-        buttonDiscuss.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Lógica para lidar com o clique no botão de discutir
-                // Implemente a funcionalidade desejada, como abrir uma tela de discussões
-            }
-        });
-
-        return itemView;
+        return convertView;
     }
+
 
     private String formatDate(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         return dateFormat.format(date);
+    }
+
+    private static class ViewHolder {
+        TextView textViewTitle;
+        TextView textViewContent;
+        TextView textViewAuthor;
+        TextView textViewDate;
+        TextView textViewLikes;
+        TextView textViewDislikes;
+        Button buttonComment;
+        ListView listViewComments;
     }
 }

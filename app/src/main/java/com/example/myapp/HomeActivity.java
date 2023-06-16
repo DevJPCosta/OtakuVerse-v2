@@ -8,13 +8,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.example.myapp.FeedActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.Date;
 import java.util.Objects;
+
 
 public class HomeActivity extends Activity {
 
@@ -95,6 +97,7 @@ public class HomeActivity extends Activity {
 
             Post newPost = new Post(postId, postContent, author, currentDate);
 
+            assert postId != null;
             postsRef.child(postId).setValue(newPost);
 
             showToast("Post criado com sucesso");

@@ -4,14 +4,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
-
 public class Post {
     private String postId;
+    private String title;
     private String content;
     private String author;
     private Date date;
     private List<String> comments;
     private List<String> likes;
+    private List<String> dislikes;
     private List<String> discussions;
 
     public Post() {
@@ -30,6 +31,10 @@ public class Post {
 
     public String getPostId() {
         return postId;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public String getContent() {
@@ -61,6 +66,18 @@ public class Post {
             likes.remove(userId);
         } else {
             likes.add(userId);
+        }
+    }
+
+    public List<String> getDislikes() {
+        return dislikes;
+    }
+
+    public void toggleDislike(String userId) {
+        if (dislikes.contains(userId)) {
+            dislikes.remove(userId);
+        } else {
+            dislikes.add(userId);
         }
     }
 

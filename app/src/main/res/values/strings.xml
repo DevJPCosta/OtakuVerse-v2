@@ -17,4 +17,8 @@
     <string name="comentar">Comentar</string>
     <string name="curtir">Curtir</string>
     <string name="discutir">Discutir</string>
+    <string name="coment_rios">Comentários:</string>
+    <string name="ver_feed">Ver Feed</string>
+    <string name="_0_curtidas">0 curtidas</string>
+    <string name="_0_descurtidas">0 descurtidas</string>
 </resources>

@@ -3,8 +3,15 @@ package com.example.myapp;
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
+
 import com.example.myapp.R;
-import java.util.Arrays;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class UserProfileActivity extends Activity {
 
@@ -14,9 +21,35 @@ public class UserProfileActivity extends Activity {
         setContentView(R.layout.activity_user_profile);
 
         // Obter dados do perfil do usuário
-        UserProfile userProfile = getUserProfile();
+        getUserProfile();
+    }
 
-        // Exibir os dados do perfil na atividade
+    private void getUserProfile() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+        if (firebaseUser != null) {
+            String userId = firebaseUser.getUid();
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
+
+            userRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
+                        displayUserProfile(userProfile);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Tratar erros de leitura do banco de dados, se necessário
+                }
+            });
+        }
+    }
+
+    private void displayUserProfile(UserProfile userProfile) {
         TextView textViewName = findViewById(R.id.textViewName);
         TextView textViewEmail = findViewById(R.id.textViewEmail);
         TextView textViewAge = findViewById(R.id.textViewAge);
@@ -30,19 +63,5 @@ public class UserProfileActivity extends Activity {
         textViewBio.setText(userProfile.getBio());
         textViewLocation.setText(userProfile.getLocation());
         // ...
-    }
-
-    private UserProfile getUserProfile() {
-        // Aqui você pode implementar a lógica para obter os dados do perfil do usuário
-        // Pode ser a partir de um banco de dados, serviço web, etc.
-        // Por enquanto, retornaremos um UserProfile fictício para fins de exemplo
-        return new UserProfile(
-                "John Doe",
-                "johndoe@example.com",
-                30,
-                "I'm a software developer",
-                "New York",
-                Arrays.asList("Programming", "Reading", "Traveling")
-        );
     }
 }

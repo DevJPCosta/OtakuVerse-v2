@@ -31,22 +31,52 @@
         android:layout_height="wrap_content"
         android:textSize="12sp" />
 
-    <Button
-        android:id="@+id/buttonComment"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/comentar" />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/buttonLike"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/curtir" />
+        <Button
+            android:id="@+id/buttonComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/comentar" />
 
-    <Button
-        android:id="@+id/buttonDiscuss"
+        <TextView
+            android:id="@+id/textViewLikes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/_0_curtidas"
+            android:textSize="12sp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp" />
+
+        <TextView
+            android:id="@+id/textViewDislikes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/_0_descurtidas"
+            android:textSize="12sp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewComments"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/discutir" />
+        android:text="@string/coment_rios"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:paddingTop="8dp" />
+
+    <ListView
+        android:id="@+id/listViewComments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:paddingTop="8dp" />
 
 </LinearLayout>

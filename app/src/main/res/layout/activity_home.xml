@@ -15,24 +15,24 @@
         android:id="@+id/editTextPost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Digite o conteúdo do post" />
+        android:hint="@string/digite_o_conte_do_do_post" />
 
     <Button
         android:id="@+id/buttonCreatePost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Criar Post" />
+        android:text="@string/criar_post" />
 
     <Button
         android:id="@+id/buttonViewFeed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ver Feed" />
+        android:text="@string/ver_feed" />
 
     <Button
         android:id="@+id/buttonLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Logout" />
+        android:text="@string/logout" />
 
 </LinearLayout>

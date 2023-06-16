@@ -88,7 +88,7 @@ public class RegisterActivity extends Activity {
 
     private void navigateToHomeScreen() {
         // Lógica para navegar para a próxima tela (por exemplo, a tela inicial do aplicativo)
-        Intent intent = new Intent(RegisterActivity.this, UserProfile.class);
+        Intent intent = new Intent(RegisterActivity.this, UserProfileActivity.class);
         startActivity(intent);
         finish(); // Opcionalmente, você pode finalizar a atividade atual se não precisar mais dela na pilha de atividades.
     }
