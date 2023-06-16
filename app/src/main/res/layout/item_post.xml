@@ -31,4 +31,22 @@
         android:layout_height="wrap_content"
         android:textSize="12sp" />
 
+    <Button
+        android:id="@+id/buttonComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/comentar" />
+
+    <Button
+        android:id="@+id/buttonLike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/curtir" />
+
+    <Button
+        android:id="@+id/buttonDiscuss"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/discutir" />
+
 </LinearLayout>

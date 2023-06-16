@@ -8,8 +8,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,7 +27,6 @@ public class FeedActivity extends Activity {
     private EditText editTextPost;
     private Button buttonPost;
 
-    // Referência ao nó "posts" no banco de dados do Firebase
     private DatabaseReference postsRef;
 
     @Override
@@ -36,39 +38,59 @@ public class FeedActivity extends Activity {
         editTextPost = findViewById(R.id.editTextPost);
         buttonPost = findViewById(R.id.buttonPost);
 
-        postList = new ArrayList<>(); // Inicialmente, a lista de posts está vazia
-
+        postList = new ArrayList<>();
         adapter = new PostAdapter(this, postList);
         listView.setAdapter(adapter);
 
-        // Obtém a referência ao nó "posts" no banco de dados do Firebase
         postsRef = FirebaseDatabase.getInstance().getReference("posts");
 
         buttonPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String postContent = editTextPost.getText().toString().trim();
+                createPost();
+            }
+        });
 
-                if (!postContent.isEmpty()) {
-                    // Cria um ID único para o novo post
-                    String postId = postsRef.push().getKey();
+        // Carrega os posts do Firebase Database
+        loadPosts();
+    }
 
-                    // Obtém a data e hora atual
-                    Date currentDate = new Date();
+    private void createPost() {
+        String postContent = editTextPost.getText().toString().trim();
 
-                    // Cria um novo objeto Post com o conteúdo, autor, data e ID
-                    Post newPost = new Post(postId, postContent, "Autor", currentDate);
+        if (!postContent.isEmpty()) {
+            String postId = postsRef.push().getKey();
+            String author = "Autor";
+            Date currentDate = new Date();
 
-                    // Salva o novo post no banco de dados do Firebase
-                    postsRef.child(postId).setValue(newPost);
+            Post newPost = new Post(postId, postContent, author, currentDate);
 
-                    // Limpa o campo de texto da postagem
-                    editTextPost.setText("");
+            postsRef.child(postId).setValue(newPost);
 
-                    showToast("Postagem realizada com sucesso");
-                } else {
-                    showToast("Digite o conteúdo da postagem");
+            showToast("Postagem realizada com sucesso");
+            editTextPost.setText("");
+        } else {
+            showToast("Digite o conteúdo da postagem");
+        }
+    }
+
+    private void loadPosts() {
+        postsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                postList.clear();
+
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Post post = postSnapshot.getValue(Post.class);
+                    postList.add(post);
                 }
+
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                showToast("Falha ao carregar os posts: " + databaseError.getMessage());
             }
         });
     }

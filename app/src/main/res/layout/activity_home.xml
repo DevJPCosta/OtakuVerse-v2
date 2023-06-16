@@ -1,35 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center">
-
-    <TextView
-        android:id="@+id/textViewWelcome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textColor="@android:color/black"
-        android:padding="16dp"
-        tools:text="Bem-vindo, Usuário!" />
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/textViewUserEmail"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:textColor="@android:color/black"
-        android:textSize="16sp"
-        tools:text="user@example.com" />
-
-    <Button
-        android:id="@+id/buttonLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="@string/logout" />
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
         android:id="@+id/editTextPost"
@@ -41,7 +21,18 @@
         android:id="@+id/buttonCreatePost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp"
         android:text="Criar Post" />
+
+    <Button
+        android:id="@+id/buttonViewFeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ver Feed" />
+
+    <Button
+        android:id="@+id/buttonLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout" />
 
 </LinearLayout>

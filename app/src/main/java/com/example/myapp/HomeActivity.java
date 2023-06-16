@@ -8,12 +8,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.example.myapp.FeedActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.Date;
 import java.util.Objects;
 
@@ -24,6 +23,7 @@ public class HomeActivity extends Activity {
     private Button buttonLogout;
     private EditText editTextPost;
     private Button buttonCreatePost;
+    private Button buttonViewFeed; // Botão para visualizar o feed
 
     private DatabaseReference postsRef;
 
@@ -37,6 +37,7 @@ public class HomeActivity extends Activity {
         buttonLogout = findViewById(R.id.buttonLogout);
         editTextPost = findViewById(R.id.editTextPost);
         buttonCreatePost = findViewById(R.id.buttonCreatePost);
+        buttonViewFeed = findViewById(R.id.buttonViewFeed); // Referência ao botão "Ver Feed" no layout
 
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +50,14 @@ public class HomeActivity extends Activity {
             @Override
             public void onClick(View v) {
                 createPost();
+            }
+        });
+
+        // Configurar o clique do botão "Ver Feed" para abrir a FeedActivity
+        buttonViewFeed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectToFeedActivity();
             }
         });
 
@@ -70,6 +79,10 @@ public class HomeActivity extends Activity {
     private void redirectToMainActivity() {
         startActivity(new Intent(HomeActivity.this, MainActivity.class));
         finish();
+    }
+
+    private void redirectToFeedActivity() {
+        startActivity(new Intent(HomeActivity.this, FeedActivity.class));
     }
 
     private void createPost() {

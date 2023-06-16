@@ -12,4 +12,9 @@
     <string name="postar">Postar</string>
     <string name="logout">Logout</string>
     <string name="create_account">create_account</string>
+    <string name="digite_o_conte_do_do_post">Digite o conteúdo do post</string>
+    <string name="criar_post">Criar Post</string>
+    <string name="comentar">Comentar</string>
+    <string name="curtir">Curtir</string>
+    <string name="discutir">Discutir</string>
 </resources>
