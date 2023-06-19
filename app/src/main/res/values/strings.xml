@@ -25,4 +25,6 @@
     <string name="todo">TODO</string>
     <string name="ver_postagem">Ver Postagem</string>
     <string name="ver_post">Ver Post</string>
+    <string name="digite_seu_coment_rio">Digite seu comentário</string>
+    <string name="adicionar_coment_rio">Adicionar Comentário</string>
 </resources>

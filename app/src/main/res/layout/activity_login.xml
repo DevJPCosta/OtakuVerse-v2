@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -11,7 +12,9 @@
         android:layout_height="wrap_content"
         android:hint="@string/email"
         android:minHeight="48dp"
-        android:textColorHint="#B39DDB" />
+        android:textColor="#8C9EFF"
+        android:textColorHint="#B39DDB"
+        tools:text="@tools:sample/lorem" />
 
     <EditText
         android:id="@+id/editTextPassword"
@@ -20,7 +23,9 @@
         android:hint="@string/senha"
         android:inputType="textPassword"
         android:minHeight="48dp"
-        android:textColorHint="#B0BEC5" />
+        android:textColor="#4DD0E1"
+        android:textColorHint="#B0BEC5"
+        tools:text="@tools:sample/lorem" />
 
     <Button
         android:id="@+id/buttonLogin"

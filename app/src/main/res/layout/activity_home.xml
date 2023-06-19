@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -9,7 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#9E9E9E"
+        tools:text="@tools:sample/last_names" />
 
     <EditText
         android:id="@+id/editTextPost"
@@ -18,7 +21,9 @@
         android:autofillHints=""
         android:hint="@string/digite_o_conte_do_do_post"
         android:minHeight="48dp"
-        android:textColorHint="#B39DDB" />
+        android:textColor="#1976D2"
+        android:textColorHint="#B39DDB"
+        tools:text="@tools:sample/cities" />
 
     <Button
         android:id="@+id/buttonCreatePost"

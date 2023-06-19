@@ -43,8 +43,9 @@
         <!-- Outras atividades aqui -->
 
         <activity
-            android:name=".CommentAdapter"
+            android:name=".CommenterActivity"
             android:theme="@style/Theme.MyApp" />
+
         <activity
             android:name=".PostAdapter"
             android:theme="@style/Theme.MyApp" />
@@ -54,6 +55,8 @@
             android:theme="@style/Theme.MyApp" />
 
         <activity android:name=".PostActivity" />
+
+        <activity android:name=".CommentAdapter" />
 
 
     </application>

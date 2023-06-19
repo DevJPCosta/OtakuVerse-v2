@@ -40,4 +40,5 @@ public class CommentAdapter extends ArrayAdapter<String> {
 
         return itemView;
     }
+
 }

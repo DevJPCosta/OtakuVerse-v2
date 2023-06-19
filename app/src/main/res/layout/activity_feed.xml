@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/digite_sua_postagem"
-        android:textColorHint="#8C9EFF" />
+        android:textColorHint="#E3E3E3" />
 
     <Button
         android:id="@+id/buttonPost"
@@ -26,6 +26,7 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:textColorHint="#E3E3E3" />
 
 </LinearLayout>

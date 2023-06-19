@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -16,52 +17,64 @@
 
     <TextView
         android:id="@+id/textViewName"
-        android:layout_width="wrap_content"
+        android:layout_width="122dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:textColor="#BA68C8"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center_horizontal" />
+        tools:text="@tools:sample/full_names" />
 
     <TextView
         android:id="@+id/textViewEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:layout_width="131dp"
+        android:layout_height="16dp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
-        android:layout_gravity="center_horizontal" />
+        android:textColor="#B388FF"
+        android:textSize="16sp"
+        tools:text="@tools:sample/first_names" />
 
     <TextView
         android:id="@+id/textViewAge"
-        android:layout_width="wrap_content"
+        android:layout_width="90dp"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
-        android:layout_gravity="center_horizontal" />
+        android:textColor="#2196F3"
+        android:textSize="16sp"
+        tools:text="@tools:sample/date/day_of_week" />
 
     <TextView
         android:id="@+id/textViewBio"
-        android:layout_width="wrap_content"
+        android:layout_width="295dp"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
-        android:layout_gravity="center_horizontal" />
+        android:textColor="#E0E0E0"
+        android:textSize="16sp"
+        tools:text="@tools:sample/lorem" />
 
     <TextView
         android:id="@+id/textViewLocation"
-        android:layout_width="wrap_content"
+        android:layout_width="244dp"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
-        android:layout_gravity="center_horizontal" />
+        android:textColor="#B39DDB"
+        android:textSize="16sp"
+        tools:text="@tools:sample/cities" />
 
     <TextView
         android:id="@+id/textViewInterestsTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="362dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColor="#000000"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:layout_marginTop="16dp" />
+        tools:text="@tools:sample/full_names" />
 
     <LinearLayout
         android:id="@+id/interestsLayout"
