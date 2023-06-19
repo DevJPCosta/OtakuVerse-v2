@@ -98,7 +98,7 @@ public class PostActivity extends Activity {
     }
 
     private void openCommentActivity() {
-        Intent intent = new Intent(PostActivity.this, CommentAdapter.class);
+        Intent intent = new Intent(PostActivity.this, CommenterActivity.class);
         intent.putExtra("postId", postId);
         startActivity(intent);
     }

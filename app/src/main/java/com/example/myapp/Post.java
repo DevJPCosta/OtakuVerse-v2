@@ -1,7 +1,6 @@
 package com.example.myapp;
 
 import com.google.firebase.firestore.DocumentSnapshot;
-
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +15,7 @@ public class Post {
     private List<String> likes;
     private List<String> dislikes;
     private List<String> discussions;
+    private String description; // Adicionado o campo para a descrição
 
     public Post() {
         // Construtor vazio necessário para o Firebase Firestore
@@ -110,6 +110,14 @@ public class Post {
         this.discussions = discussions;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public static Post fromDocumentSnapshot(DocumentSnapshot document) {
         Post post = new Post();
         post.setPostId(document.getId());
@@ -122,6 +130,7 @@ public class Post {
         post.setLikes((List<String>) document.get("likes"));
         post.setDislikes((List<String>) document.get("dislikes"));
         post.setDiscussions((List<String>) document.get("discussions"));
+        post.setDescription(document.getString("description")); // Atribuir o valor do campo "description"
         return post;
     }
 }

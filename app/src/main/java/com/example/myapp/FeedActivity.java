@@ -23,9 +23,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class FeedActivity extends ListActivity {
 
@@ -69,7 +72,7 @@ public class FeedActivity extends ListActivity {
             String postId = postsRef.push().getKey();
             String author = "Autor";
             String authorId = "authorId"; // Substitua pelo valor correto do authorId
-            Date currentDate = new Date();
+            Date currentDate = new Date(System.currentTimeMillis()); // Atualizado para obter a data corretamente
             String postTitle = postContent;
 
             Post newPost = new Post(postId, postTitle, postContent, author, authorId, currentDate);
@@ -104,6 +107,7 @@ public class FeedActivity extends ListActivity {
             }
         });
     }
+
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
@@ -162,21 +166,36 @@ public class FeedActivity extends ListActivity {
                 holder.textViewTitle.setText(post.getTitle());
                 holder.textViewContent.setText(post.getContent());
                 holder.textViewAuthor.setText(post.getAuthor());
-                holder.textViewDate.setText(post.getDate().toString());
+
+                // Verifica se a data não é nula antes de chamá-la
+                if (post.getDate() != null) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                    String formattedDate = dateFormat.format(post.getDate());
+                    holder.textViewDate.setText(formattedDate);
+                } else {
+                    holder.textViewDate.setText("");
+                }
+
                 // Configure os outros elementos conforme necessário
             }
 
-            // Configura o listener de clique para o botão de visualizar postagem
+// Configura o listener de clique para o botão de visualizar postagem
             holder.buttonViewPost.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Obtém o post atual
                     Post currentPost = getItem(position);
 
-                    // Chama o método para abrir a tela de exibição do post
-                    openPostActivity(currentPost.getPostId());
+                    // Verifica se o currentPost não é nulo e se o postId não é nulo
+                    if (currentPost != null && currentPost.getPostId() != null) {
+                        // Chama o método para abrir a tela de exibição do post
+                        openPostActivity(currentPost.getPostId());
+                    } else {
+                        showToast("Erro: postId nulo");
+                    }
                 }
             });
+
 
             return convertView;
         }

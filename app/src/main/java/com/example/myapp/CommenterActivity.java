@@ -29,6 +29,12 @@ public class CommenterActivity extends Activity {
     private List<String> commentList;
     private CommentAdapter commentAdapter;
 
+    // Interface CommentKeyCallback
+    private interface CommentKeyCallback {
+        void onCommentKeyFound(String commentKey);
+        void onCommentKeyNotFound();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,9 +82,16 @@ public class CommenterActivity extends Activity {
             editTextComment.setText("");
 
             // Salve o comentário no Firebase Database
-            postRef.push().setValue(comment);
-
-            showToast("Comentário adicionado com sucesso");
+            postRef.push().setValue(comment, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        showToast("Comentário adicionado com sucesso");
+                    } else {
+                        showToast("Falha ao adicionar o comentário");
+                    }
+                }
+            });
         } else {
             showToast("Digite um comentário válido");
         }
@@ -95,19 +108,31 @@ public class CommenterActivity extends Activity {
             commentAdapter.notifyDataSetChanged();
 
             // Encontre a chave do comentário no Firebase Database
-            String commentKey = findCommentKey(comment, postRef);
+            findCommentKey(comment, new CommentKeyCallback() {
+                @Override
+                public void onCommentKeyFound(String commentKey) {
+                    // Remova o comentário do Firebase Database
+                    postRef.child(commentKey).removeValue(new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            if (databaseError == null) {
+                                showToast("Comentário excluído com sucesso");
+                            } else {
+                                showToast("Falha ao excluir o comentário");
+                            }
+                        }
+                    });
+                }
 
-            // Remova o comentário do Firebase Database
-            if (commentKey != null) {
-                postRef.child(commentKey).removeValue();
-                showToast("Comentário excluído com sucesso");
-            } else {
-                showToast("Falha ao excluir o comentário");
-            }
+                @Override
+                public void onCommentKeyNotFound() {
+                    showToast("Falha ao excluir o comentário");
+                }
+            });
         }
     }
 
-    private String findCommentKey(String comment, DatabaseReference postRef) {
+    private void findCommentKey(String comment, CommentKeyCallback callback) {
         postRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -115,11 +140,13 @@ public class CommenterActivity extends Activity {
                     String key = commentSnapshot.getKey();
                     String value = commentSnapshot.getValue(String.class);
                     if (value != null && value.equals(comment)) {
-                        // A chave do comentário foi encontrada, realize a remoção aqui
-                        postRef.child(key).removeValue();
-                        break;
+                        // A chave do comentário foi encontrada, chame o método onCommentKeyFound
+                        callback.onCommentKeyFound(key);
+                        return;
                     }
                 }
+                // A chave do comentário não foi encontrada, chame o método onCommentKeyNotFound
+                callback.onCommentKeyNotFound();
             }
 
             @Override
@@ -127,7 +154,6 @@ public class CommenterActivity extends Activity {
                 showToast("Falha ao excluir o comentário");
             }
         });
-        return null;
     }
 
     private void loadComments() {
