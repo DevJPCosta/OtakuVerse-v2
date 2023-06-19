@@ -1,14 +1,16 @@
 package com.example.myapp;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+
 import java.util.Date;
 import java.util.List;
-import java.util.ArrayList;
 
 public class Post {
     private String postId;
     private String title;
     private String content;
     private String author;
+    private String authorId; // Adicionado o campo para o ID do autor
     private Date date;
     private List<String> comments;
     private List<String> likes;
@@ -16,91 +18,110 @@ public class Post {
     private List<String> discussions;
 
     public Post() {
-        // Construtor vazio necessário para o Firebase Database
+        // Construtor vazio necessário para o Firebase Firestore
     }
 
-    public Post(String postId, String content, String author, Date date) {
+    public Post(String postId, String title, String content, String author, String authorId, Date date) {
         this.postId = postId;
+        this.title = title;
         this.content = content;
         this.author = author;
+        this.authorId = authorId;
         this.date = date;
-        this.comments = new ArrayList<>();
-        this.likes = new ArrayList<>();
-        this.dislikes = new ArrayList<>();
-        this.discussions = new ArrayList<>();
     }
 
     public String getPostId() {
         return postId;
     }
 
+    public void setPostId(String postId) {
+        this.postId = postId;
+    }
+
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getContent() {
         return content;
     }
 
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     public String getAuthor() {
         return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(String authorId) {
+        this.authorId = authorId;
     }
 
     public Date getDate() {
         return date;
     }
 
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     public List<String> getComments() {
         return comments;
     }
 
-    public void addComment(String comment) {
-        comments.add(comment);
+    public void setComments(List<String> comments) {
+        this.comments = comments;
     }
 
     public List<String> getLikes() {
         return likes;
     }
 
-    public void toggleLike(String userId) {
-        if (likes.contains(userId)) {
-            likes.remove(userId);
-        } else {
-            likes.add(userId);
-        }
+    public void setLikes(List<String> likes) {
+        this.likes = likes;
     }
 
     public List<String> getDislikes() {
         return dislikes;
     }
 
-    public void toggleDislike(String userId) {
-        if (dislikes.contains(userId)) {
-            dislikes.remove(userId);
-        } else {
-            dislikes.add(userId);
-        }
+    public void setDislikes(List<String> dislikes) {
+        this.dislikes = dislikes;
     }
 
     public List<String> getDiscussions() {
         return discussions;
     }
 
-    public void toggleDiscussion(String userId) {
-        if (discussions.contains(userId)) {
-            discussions.remove(userId);
-        } else {
-            discussions.add(userId);
-        }
+    public void setDiscussions(List<String> discussions) {
+        this.discussions = discussions;
     }
 
-    public String getAuthorId() {
-        // Aqui você pode retornar o ID do autor com base em alguma lógica específica,
-        // como um campo adicional no objeto Post ou qualquer outra fonte de dados.
-        // Por exemplo, se o ID do autor estiver sendo armazenado em um campo separado,
-        // você pode retorná-lo da seguinte maneira:
-        // return authorId;
-        // Se o ID do autor for o mesmo que o próprio autor, você pode retornar o ID da seguinte maneira:
-        return author;
+    public static Post fromDocumentSnapshot(DocumentSnapshot document) {
+        Post post = new Post();
+        post.setPostId(document.getId());
+        post.setTitle(document.getString("title"));
+        post.setContent(document.getString("content"));
+        post.setAuthor(document.getString("author"));
+        post.setAuthorId(document.getString("authorId"));
+        post.setDate(document.getDate("date"));
+        post.setComments((List<String>) document.get("comments"));
+        post.setLikes((List<String>) document.get("likes"));
+        post.setDislikes((List<String>) document.get("dislikes"));
+        post.setDiscussions((List<String>) document.get("discussions"));
+        return post;
     }
 }

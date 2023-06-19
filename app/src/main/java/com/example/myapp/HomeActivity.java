@@ -17,7 +17,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Date;
 import java.util.Objects;
 
-
 public class HomeActivity extends Activity {
 
     private FirebaseAuth mAuth;
@@ -93,9 +92,11 @@ public class HomeActivity extends Activity {
         if (!postContent.isEmpty()) {
             String postId = postsRef.push().getKey();
             String author = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
+            String authorId = mAuth.getCurrentUser().getUid();
             Date currentDate = new Date();
+            String postTitle = postContent;
 
-            Post newPost = new Post(postId, postContent, author, currentDate);
+            Post newPost = new Post(postId, postTitle, postContent, author, authorId, currentDate);
 
             assert postId != null;
             postsRef.child(postId).setValue(newPost);

@@ -68,9 +68,11 @@ public class FeedActivity extends ListActivity {
         if (!postContent.isEmpty()) {
             String postId = postsRef.push().getKey();
             String author = "Autor";
+            String authorId = "authorId"; // Substitua pelo valor correto do authorId
             Date currentDate = new Date();
+            String postTitle = postContent;
 
-            Post newPost = new Post(postId, postContent, author, currentDate);
+            Post newPost = new Post(postId, postTitle, postContent, author, authorId, currentDate);
 
             assert postId != null;
             postsRef.child(postId).setValue(newPost);
@@ -107,17 +109,6 @@ public class FeedActivity extends ListActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    private void openPostActivity(Post post) {
-        Intent intent = new Intent(this, PostActivity.class);
-        intent.putExtra("postId", post.getPostId());
-        intent.putExtra("postTitle", post.getTitle());
-        intent.putExtra("postContent", post.getContent());
-        // Adicione outros dados necessários
-        // ...
-
-        startActivity(intent);
-    }
-
     private static class ViewHolder {
         TextView textViewTitle;
         TextView textViewContent;
@@ -128,9 +119,7 @@ public class FeedActivity extends ListActivity {
         Button buttonComment;
         ListView listViewComments;
         Button buttonDelete;
-        Button buttonViewPost;
     }
-
 
     public class PostAdapter extends ArrayAdapter<Post> {
 
@@ -154,27 +143,20 @@ public class FeedActivity extends ListActivity {
                 holder.buttonComment = convertView.findViewById(R.id.buttonComment);
                 holder.listViewComments = convertView.findViewById(R.id.listViewComments);
                 holder.buttonDelete = convertView.findViewById(R.id.buttonDelete);
-                holder.buttonViewPost = convertView.findViewById(R.id.buttonViewPost);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            // Resto do código...
-
-            // Configura o listener de clique para o botão de visualizar postagem
-            holder.buttonViewPost.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Obtém o post atual
-                    Post currentPost = getItem(position);
-
-                    // Chama o método para abrir a tela de exibição do post
-                    openPostActivity(currentPost);
-                }
-            });
-
-            // Resto do código...
+            // Preenche os dados do post nos elementos de interface do usuário
+            Post post = getItem(position);
+            if (post != null) {
+                holder.textViewTitle.setText(post.getTitle());
+                holder.textViewContent.setText(post.getContent());
+                holder.textViewAuthor.setText(post.getAuthor());
+                holder.textViewDate.setText(post.getDate().toString());
+                // Configure os outros elementos conforme necessário
+            }
 
             return convertView;
         }

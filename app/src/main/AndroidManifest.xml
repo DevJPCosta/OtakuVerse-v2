@@ -53,6 +53,8 @@
             android:name=".UserProfileActivity"
             android:theme="@style/Theme.MyApp" />
 
+        <activity android:name=".PostActivity" />
+
 
     </application>
 

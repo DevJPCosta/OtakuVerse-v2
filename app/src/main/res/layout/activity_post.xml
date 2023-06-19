@@ -9,16 +9,19 @@
         android:id="@+id/textViewPostTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="16dp"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:padding="16dp" />
+        android:visibility="visible"
+        android:textColorHint="#8C9EFF"/>
 
     <TextView
         android:id="@+id/textViewPostContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:padding="16dp" />
+        android:padding="16dp"
+        android:textColorHint="#8C9EFF"/>
 
     <TextView
         android:id="@+id/textViewPostAuthor"
@@ -26,6 +29,7 @@
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:textStyle="italic"
-        android:padding="16dp" />
+        android:padding="16dp"
+        android:textColorHint="#8C9EFF"/>
 
 </LinearLayout>

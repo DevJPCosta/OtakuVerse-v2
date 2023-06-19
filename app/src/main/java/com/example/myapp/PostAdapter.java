@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class PostAdapter extends ArrayAdapter<Post> {
 
@@ -97,7 +98,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
         }
 
         // Verifica se o autor do post é o mesmo que o usuário atualmente logado
-        String currentUserId = firebaseAuth.getCurrentUser().getUid();
+        String currentUserId = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid();
         String postAuthorId = currentPost.getAuthorId();
         if (currentUserId.equals(postAuthorId)) {
             // O usuário atual é o autor do post, exibe o botão de exclusão
