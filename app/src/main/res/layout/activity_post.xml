@@ -31,5 +31,17 @@
         android:textStyle="italic"
         android:padding="16dp"
         android:textColorHint="#8C9EFF"/>
+    <Button
+        android:id="@+id/buttonDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/excluir" />
+
+    <Button
+        android:id="@+id/buttonComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/comentar" />
+
 
 </LinearLayout>

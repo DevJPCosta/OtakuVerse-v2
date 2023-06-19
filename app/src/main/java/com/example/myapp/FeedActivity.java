@@ -109,6 +109,12 @@ public class FeedActivity extends ListActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
+    private void openPostActivity(String postId) {
+        Intent intent = new Intent(this, PostActivity.class);
+        intent.putExtra("postId", postId);
+        startActivity(intent);
+    }
+
     private static class ViewHolder {
         TextView textViewTitle;
         TextView textViewContent;
@@ -119,6 +125,7 @@ public class FeedActivity extends ListActivity {
         Button buttonComment;
         ListView listViewComments;
         Button buttonDelete;
+        Button buttonViewPost;
     }
 
     public class PostAdapter extends ArrayAdapter<Post> {
@@ -143,6 +150,7 @@ public class FeedActivity extends ListActivity {
                 holder.buttonComment = convertView.findViewById(R.id.buttonComment);
                 holder.listViewComments = convertView.findViewById(R.id.listViewComments);
                 holder.buttonDelete = convertView.findViewById(R.id.buttonDelete);
+                holder.buttonViewPost = convertView.findViewById(R.id.buttonViewPost);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -157,6 +165,18 @@ public class FeedActivity extends ListActivity {
                 holder.textViewDate.setText(post.getDate().toString());
                 // Configure os outros elementos conforme necessário
             }
+
+            // Configura o listener de clique para o botão de visualizar postagem
+            holder.buttonViewPost.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Obtém o post atual
+                    Post currentPost = getItem(position);
+
+                    // Chama o método para abrir a tela de exibição do post
+                    openPostActivity(currentPost.getPostId());
+                }
+            });
 
             return convertView;
         }
