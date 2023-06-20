@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/background_color"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/textViewUserEmail"
@@ -11,7 +13,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#9E9E9E"
+        android:textColor="@color/email_text_color"
         tools:text="@tools:sample/last_names" />
 
     <EditText
@@ -19,28 +21,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:autofillHints=""
+        android:backgroundTint="@color/purple_200"
         android:hint="@string/digite_o_conte_do_do_post"
         android:minHeight="48dp"
-        android:textColor="#1976D2"
-        android:textColorHint="#B39DDB"
-        tools:text="@tools:sample/cities" />
+        android:textColor="#B388FF"
+        android:textColorHint="@color/name_text_hint_color"
+        tools:text="@tools:sample/cities"
+        tools:ignore="TextFields,VisualLintTextFieldSize" />
 
     <Button
         android:id="@+id/buttonCreatePost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/criar_post" />
+        android:text="@string/criar_post"
+        android:textColor="@color/white"
+        android:background="@drawable/button_background"
+        android:layout_marginTop="8dp" />
 
     <Button
         android:id="@+id/buttonViewFeed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/ver_feed" />
+        android:text="@string/ver_feed"
+        android:textColor="@color/white"
+        android:background="@drawable/button_background"
+        android:layout_marginTop="8dp" />
 
     <Button
         android:id="@+id/buttonLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/logout" />
+        android:text="@string/logout"
+        android:textColor="@color/white"
+        android:background="@drawable/button_background"
+        android:layout_marginTop="8dp" />
 
 </LinearLayout>

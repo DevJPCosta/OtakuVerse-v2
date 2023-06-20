@@ -7,8 +7,9 @@
 
     <TextView
         android:id="@+id/textViewCommentContent"
-        android:layout_width="411dp"
+        android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:textColor="@color/light_purple" />
 
 </LinearLayout>

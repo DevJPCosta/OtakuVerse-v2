@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -8,17 +9,22 @@
         android:id="@+id/editTextComment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/digite_seu_coment_rio"/>
+        android:hint="@string/digite_seu_coment_rio"
+        android:textColor="@color/light_purple"
+        android:textColorHint="#0277BD"
+        tools:ignore="Autofill,TextFields,VisualLintTextFieldSize" />
 
     <Button
         android:id="@+id/buttonAddComment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/adicionar_coment_rio"/>
+        android:backgroundTint="@color/light_purple"
+        android:text="@string/adicionar_coment_rio"
+        android:textColor="#4E342E" />
 
     <ListView
         android:id="@+id/listViewComments"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

@@ -27,4 +27,8 @@
     <string name="ver_post">Ver Post</string>
     <string name="digite_seu_coment_rio">Digite seu comentário</string>
     <string name="adicionar_coment_rio">Adicionar Comentário</string>
+    <string name="age">age</string>
+    <string name="bio">bio</string>
+    <string name="location">location</string>
+    <string name="interests">interests</string>
 </resources>

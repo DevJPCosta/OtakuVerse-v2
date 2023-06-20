@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/background_color"
     android:padding="16dp">
 
     <EditText
@@ -12,9 +13,11 @@
         android:layout_height="wrap_content"
         android:hint="@string/email"
         android:minHeight="48dp"
-        android:textColor="#8C9EFF"
-        android:textColorHint="#B39DDB"
-        tools:text="@tools:sample/lorem" />
+        android:textColor="@color/edittext_text_color"
+        android:textColorHint="@color/edittext_text_hint_color"
+        android:backgroundTint="@color/edittext_background_tint"
+        tools:text="@tools:sample/lorem"
+        tools:ignore="Autofill,TextFields,VisualLintTextFieldSize" />
 
     <EditText
         android:id="@+id/editTextPassword"
@@ -23,20 +26,30 @@
         android:hint="@string/senha"
         android:inputType="textPassword"
         android:minHeight="48dp"
-        android:textColor="#4DD0E1"
-        android:textColorHint="#B0BEC5"
-        tools:text="@tools:sample/lorem" />
+        android:textColor="@color/edittext_text_color"
+        android:textColorHint="@color/edittext_text_hint_color"
+        android:backgroundTint="@color/edittext_background_tint"
+        tools:text="@tools:sample/lorem"
+        tools:ignore="Autofill,VisualLintTextFieldSize" />
 
     <Button
         android:id="@+id/buttonLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/login" />
+        android:text="@string/login"
+        android:textColor="@color/button_text_color"
+        android:background="@drawable/button_background"
+        android:layout_marginTop="16dp"
+        tools:ignore="VisualLintButtonSize" />
 
     <Button
         android:id="@+id/buttonCreateAccount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/create_account" />
+        android:text="@string/create_account"
+        android:textColor="@color/button_text_color"
+        android:background="@drawable/button_background"
+        android:layout_marginTop="8dp"
+        tools:ignore="VisualLintButtonSize" />
 
 </LinearLayout>

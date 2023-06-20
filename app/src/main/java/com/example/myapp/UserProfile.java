@@ -1,14 +1,20 @@
 package com.example.myapp;
 
 import java.util.List;
+import androidx.annotation.Keep;
 
+@Keep
 public class UserProfile {
-    private final String name;
-    private final String email;
-    private final int age;
-    private final String bio;
-    private final String location;
-    private final List<String> interests;
+    private String name;
+    private String email;
+    private int age;
+    private String bio;
+    private String location;
+    private List<String> interests;
+
+    // Construtor sem argumentos necessário para desserialização do Firebase Firestore
+    public UserProfile() {
+    }
 
     public UserProfile(String name, String email, int age, String bio, String location, List<String> interests) {
         this.name = name;

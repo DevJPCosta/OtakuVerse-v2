@@ -1,10 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/background_color"
+    android:layout_margin="24dp">
 
     <EditText
         android:id="@+id/editTextName"
@@ -13,9 +14,10 @@
         android:autofillHints=""
         android:hint="@string/name"
         android:minHeight="48dp"
-        android:textColor="#8C9EFF"
-        android:textColorHint="#B39DDB"
-        tools:text="@tools:sample/full_names" />
+        android:textColor="@color/name_text_color"
+        android:textColorHint="@color/name_text_hint_color"
+        android:backgroundTint="@color/edittext_background_tint"
+        tools:ignore="TextFields,VisualLintTextFieldSize" />
 
     <EditText
         android:id="@+id/editTextEmail"
@@ -23,9 +25,55 @@
         android:layout_height="wrap_content"
         android:hint="@string/email"
         android:minHeight="48dp"
-        android:textColor="#1976D2"
-        android:textColorHint="#B0BEC5"
-        tools:text="@tools:sample/full_names" />
+        android:textColor="@color/email_text_color"
+        android:textColorHint="@color/email_text_hint_color"
+        android:backgroundTint="@color/edittext_background_tint"
+        tools:ignore="Autofill,TextFields,VisualLintTextFieldSize" />
+
+    <EditText
+        android:id="@+id/editTextAge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/age"
+        android:inputType="number"
+        android:minHeight="48dp"
+        android:textColor="@color/age_text_color"
+        android:textColorHint="@color/age_text_hint_color"
+        android:backgroundTint="@color/edittext_background_tint"
+        tools:ignore="Autofill,VisualLintTextFieldSize" />
+
+    <EditText
+        android:id="@+id/editTextBio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/bio"
+        android:minHeight="48dp"
+        android:textColor="@color/bio_text_color"
+        android:textColorHint="@color/bio_text_hint_color"
+        android:backgroundTint="@color/edittext_background_tint"
+        tools:ignore="Autofill,TextFields,VisualLintTextFieldSize" />
+
+    <EditText
+        android:id="@+id/editTextLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/location"
+        android:minHeight="48dp"
+        android:textColor="@color/location_text_color"
+        android:textColorHint="@color/location_text_hint_color"
+        android:backgroundTint="@color/edittext_background_tint"
+        tools:ignore="Autofill,TextFields,VisualLintTextFieldSize" />
+
+    <EditText
+        android:id="@+id/editTextInterests"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/interests"
+        android:minHeight="48dp"
+        android:textColor="@color/interests_text_color"
+        android:textColorHint="@color/interests_text_hint_color"
+        android:backgroundTint="@color/edittext_background_tint"
+        tools:ignore="Autofill,TextFields,VisualLintTextFieldSize" />
 
     <EditText
         android:id="@+id/editTextPassword"
@@ -34,14 +82,20 @@
         android:hint="@string/password"
         android:inputType="textPassword"
         android:minHeight="48dp"
-        android:textColor="#E1BEE7"
-        android:textColorHint="#E1BEE7"
-        tools:text="@tools:sample/lorem" />
+        android:textColor="@color/password_text_color"
+        android:textColorHint="@color/password_text_hint_color"
+        android:backgroundTint="@color/edittext_background_tint"
+        tools:ignore="Autofill,TextFields,VisualLintTextFieldSize" />
+
 
     <Button
         android:id="@+id/buttonRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/register" />
+        android:text="@string/register"
+        android:textColor="@color/button_text_color"
+        android:background="@drawable/button_background"
+        android:layout_marginTop="16dp"
+        tools:ignore="VisualLintButtonSize" />
 
 </LinearLayout>

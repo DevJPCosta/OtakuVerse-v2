@@ -7,16 +7,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import java.util.Collections;
+import java.util.List;
+
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Objects;
+import com.example.myapp.UserProfileActivity;
 
 public class RegisterActivity extends Activity {
 
@@ -25,19 +31,34 @@ public class RegisterActivity extends Activity {
     private EditText editTextPassword;
     private Button buttonRegister;
 
-    private FirebaseAuth firebaseAuth;
+    private EditText editTextAge;
+    private  EditText editTextBio;
+    private EditText editTextLocation;
+    private EditText editTextInterests;
+
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore mFirestore;
+    private CollectionReference mUsersCollection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        mAuth = FirebaseAuth.getInstance();
+        mFirestore = FirebaseFirestore.getInstance();
+        mUsersCollection = mFirestore.collection("users");
+
         editTextName = findViewById(R.id.editTextName);
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
+        editTextAge = findViewById(R.id.editTextAge);
+        editTextBio = findViewById(R.id.editTextBio);
+        editTextLocation = findViewById(R.id.editTextLocation);
+        editTextInterests = findViewById(R.id.editTextInterests);
         buttonRegister = findViewById(R.id.buttonRegister);
 
-        firebaseAuth = FirebaseAuth.getInstance();
+
 
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,51 +66,72 @@ public class RegisterActivity extends Activity {
                 String name = editTextName.getText().toString();
                 String email = editTextEmail.getText().toString();
                 String password = editTextPassword.getText().toString();
+                String age = editTextAge.getText().toString();
+                String bio = editTextBio.getText().toString();
+                String location = editTextLocation.getText().toString();
+                String interests = editTextInterests.getText().toString();
 
-                // Verificar se o e-mail é válido
-                if (isValidEmail(email)) {
-                    // Realizar o registro do usuário
-                    registerUser(name, email, password);
-                } else {
-                    // E-mail inválido
-                    showToast("E-mail inválido");
-                }
+
+                registerUser(name, email, password, age, bio, location, interests);
             }
         });
     }
 
-    private boolean isValidEmail(String email) {
-        // Verificar se o e-mail é válido
-        // Você pode substituir essa lógica com sua própria validação de e-mail
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
-    private void registerUser(String name, String email, String password) {
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
+    private void registerUser(final String name, String email, String password, String age, String bio, String location, String interests) {
+        mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Registro bem-sucedido
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-                            showToast("Registro realizado com sucesso");
-                            navigateToHomeScreen();
+                            // Registro do usuário bem-sucedido
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            if (user != null) {
+                                // Criação do documento do usuário no Firestore
+                                DocumentReference userRef = mUsersCollection.document(user.getUid());
+
+                                // Criação do objeto UserProfile com os campos adicionais
+                                UserProfile userProfile = new UserProfile(
+                                        name,
+                                        email,
+                                        Integer.parseInt(age),
+                                        bio,
+                                        location,
+                                        Collections.singletonList(interests)
+                                );
+
+                                // Salvando o UserProfile no Firestore
+                                userRef.set(userProfile)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                // Registro completo, redirecionar para a tela de login
+                                                showToast("Usuário registrado com sucesso");
+                                                navigateToLoginActivity();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                showToast("Falha ao registrar o usuário");
+                                            }
+                                        });
+                            }
                         } else {
-                            // Registro falhou
-                            showToast("Falha no registro: " + Objects.requireNonNull(task.getException()).getMessage());
+                            // Falha no registro do usuário
+                            showToast("Falha ao registrar o usuário");
                         }
                     }
                 });
     }
 
+
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    private void navigateToHomeScreen() {
-        // Lógica para navegar para a próxima tela (por exemplo, a tela inicial do aplicativo)
-        Intent intent = new Intent(RegisterActivity.this, UserProfileActivity.class);
+    private void navigateToLoginActivity() {
+        Intent intent = new Intent(this, UserProfileActivity.class);
         startActivity(intent);
-        finish(); // Opcionalmente, você pode finalizar a atividade atual se não precisar mais dela na pilha de atividades.
+        finish();
     }
 }

@@ -9,14 +9,12 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/icon_app"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyApp"
         tools:targetApi="31">
 
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.MyApp">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,34 +23,27 @@
         </activity>
 
         <activity
-            android:name=".RegisterActivity"
-            android:theme="@style/Theme.MyApp" />
+            android:name=".RegisterActivity" />
 
         <activity
-            android:name=".FeedActivity"
-            android:theme="@style/Theme.MyApp" />
+            android:name=".FeedActivity" />
 
         <activity
-            android:name=".HomeActivity"
-            android:theme="@style/Theme.MyApp" />
+            android:name=".HomeActivity" />
 
         <activity
-            android:name=".Post"
-            android:theme="@style/Theme.MyApp" />
+            android:name=".Post" />
 
         <!-- Outras atividades aqui -->
 
         <activity
-            android:name=".CommenterActivity"
-            android:theme="@style/Theme.MyApp" />
+            android:name=".CommenterActivity" />
 
         <activity
-            android:name=".PostAdapter"
-            android:theme="@style/Theme.MyApp" />
+            android:name=".PostAdapter" />
 
         <activity
-            android:name=".UserProfileActivity"
-            android:theme="@style/Theme.MyApp" />
+            android:name=".UserProfileActivity" />
 
         <activity android:name=".PostActivity" />
 
