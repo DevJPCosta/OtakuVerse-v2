@@ -11,8 +11,9 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
 import java.util.Objects;
@@ -26,7 +27,8 @@ public class HomeActivity extends Activity {
     private Button buttonCreatePost;
     private Button buttonViewFeed; // Botão para visualizar o feed
 
-    private DatabaseReference postsRef;
+    private FirebaseFirestore db;
+    private CollectionReference postsRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +71,8 @@ public class HomeActivity extends Activity {
             redirectToMainActivity();
         }
 
-        postsRef = FirebaseDatabase.getInstance().getReference("posts");
+        db = FirebaseFirestore.getInstance();
+        postsRef = db.collection("posts");
     }
 
     private void logoutUser() {
@@ -90,19 +93,21 @@ public class HomeActivity extends Activity {
         String postContent = editTextPost.getText().toString().trim();
 
         if (!postContent.isEmpty()) {
-            String postId = postsRef.push().getKey();
+            String postId = postsRef.document().getId();
             String author = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
             String authorId = mAuth.getCurrentUser().getUid();
-            Date currentDate = new Date();
+            Date currentDate = new Date(System.currentTimeMillis());
             String postTitle = postContent;
 
             Post newPost = new Post(postId, postTitle, postContent, author, authorId, currentDate);
 
-            assert postId != null;
-            postsRef.child(postId).setValue(newPost);
-
-            showToast("Post criado com sucesso");
-            editTextPost.setText("");
+            postsRef.document(postId)
+                    .set(newPost)
+                    .addOnSuccessListener(aVoid -> {
+                        showToast("Post criado com sucesso");
+                        editTextPost.setText("");
+                    })
+                    .addOnFailureListener(e -> showToast("Falha ao criar o post"));
         } else {
             showToast("Digite o conteúdo do post");
         }

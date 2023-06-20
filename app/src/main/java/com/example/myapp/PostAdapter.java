@@ -78,10 +78,10 @@ public class PostAdapter extends ArrayAdapter<Post> {
             holder.textViewDate.setText(formatDate(currentPost.getDate()));
         }
         if (holder.textViewLikes != null) {
-            holder.textViewLikes.setText(currentPost.getLikes() + " curtidas");
+            holder.textViewLikes.setText(currentPost.getLikes().size() + " curtidas");
         }
         if (holder.textViewDislikes != null) {
-            holder.textViewDislikes.setText(currentPost.getDislikes() + " descurtidas");
+            holder.textViewDislikes.setText(currentPost.getDislikes().size() + " descurtidas");
         }
 
         // Configure o adaptador do ListView de comentários

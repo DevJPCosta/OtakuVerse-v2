@@ -17,16 +17,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -38,7 +40,9 @@ public class FeedActivity extends ListActivity {
     private EditText editTextPost;
     private Button buttonPost;
 
-    private DatabaseReference postsRef;
+    private FirebaseFirestore db;
+    private CollectionReference postsRef;
+    private ListenerRegistration postsListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +56,8 @@ public class FeedActivity extends ListActivity {
         adapter = new PostAdapter(this, postList);
         setListAdapter(adapter);
 
-        postsRef = FirebaseDatabase.getInstance().getReference("posts");
+        db = FirebaseFirestore.getInstance();
+        postsRef = db.collection("posts");
 
         buttonPost.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,15 +66,23 @@ public class FeedActivity extends ListActivity {
             }
         });
 
-        // Carrega os posts do Firebase Database
+        // Carrega os posts do Cloud Firestore
         loadPosts();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (postsListener != null) {
+            postsListener.remove();
+        }
     }
 
     private void createPost() {
         String postContent = editTextPost.getText().toString().trim();
 
         if (!postContent.isEmpty()) {
-            String postId = postsRef.push().getKey();
+            String postId = postsRef.document().getId();
             String author = "Autor";
             String authorId = "authorId"; // Substitua pelo valor correto do authorId
             Date currentDate = new Date(System.currentTimeMillis()); // Atualizado para obter a data corretamente
@@ -77,37 +90,37 @@ public class FeedActivity extends ListActivity {
 
             Post newPost = new Post(postId, postTitle, postContent, author, authorId, currentDate);
 
-            assert postId != null;
-            postsRef.child(postId).setValue(newPost);
-
-            showToast("Postagem realizada com sucesso");
-            editTextPost.setText("");
+            postsRef.document(postId)
+                    .set(newPost)
+                    .addOnSuccessListener(aVoid -> {
+                        showToast("Postagem realizada com sucesso");
+                        editTextPost.setText("");
+                    })
+                    .addOnFailureListener(e -> showToast("Falha ao realizar a postagem"));
         } else {
             showToast("Digite o conteúdo da postagem");
         }
     }
 
     private void loadPosts() {
-        postsRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                postList.clear();
-
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Post post = postSnapshot.getValue(Post.class);
-                    postList.add(post);
-                }
-
-                adapter.notifyDataSetChanged();
+        postsListener = postsRef.addSnapshotListener((querySnapshot, e) -> {
+            if (e != null) {
+                showToast("Falha ao carregar os posts");
+                return;
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                showToast("Falha ao carregar os posts: " + databaseError.getMessage());
+            if (querySnapshot != null) {
+                postList.clear();
+                for (DocumentSnapshot documentSnapshot : querySnapshot) {
+                    Post post = documentSnapshot.toObject(Post.class);
+                    if (post != null) {
+                        postList.add(post);
+                    }
+                }
+                adapter.notifyDataSetChanged();
             }
         });
     }
-
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
@@ -179,7 +192,7 @@ public class FeedActivity extends ListActivity {
                 // Configure os outros elementos conforme necessário
             }
 
-// Configura o listener de clique para o botão de visualizar postagem
+            // Configura o listener de clique para o botão de visualizar postagem
             holder.buttonViewPost.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -195,7 +208,6 @@ public class FeedActivity extends ListActivity {
                     }
                 }
             });
-
 
             return convertView;
         }

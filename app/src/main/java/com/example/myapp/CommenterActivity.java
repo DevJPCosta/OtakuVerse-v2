@@ -9,14 +9,19 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CommenterActivity extends Activity {
 
@@ -24,16 +29,13 @@ public class CommenterActivity extends Activity {
     private Button buttonAddComment;
     private ListView listViewComments;
 
-    private DatabaseReference postRef;
+    private FirebaseFirestore db;
+    private CollectionReference commentsRef;
+    private DocumentReference postRef;
     private String postId;
     private List<String> commentList;
     private CommentAdapter commentAdapter;
-
-    // Interface CommentKeyCallback
-    private interface CommentKeyCallback {
-        void onCommentKeyFound(String commentKey);
-        void onCommentKeyNotFound();
-    }
+    private ListenerRegistration commentsListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,9 @@ public class CommenterActivity extends Activity {
 
         postId = getIntent().getStringExtra("postId");
 
-        postRef = FirebaseDatabase.getInstance().getReference("posts").child(postId).child("comments");
+        db = FirebaseFirestore.getInstance();
+        commentsRef = db.collection("posts").document(postId).collection("comments");
+        postRef = db.collection("posts").document(postId);
 
         commentList = new ArrayList<>();
         commentAdapter = new CommentAdapter(this, commentList);
@@ -69,6 +73,14 @@ public class CommenterActivity extends Activity {
         loadComments();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (commentsListener != null) {
+            commentsListener.remove();
+        }
+    }
+
     private void addComment() {
         String comment = editTextComment.getText().toString().trim();
         if (!comment.isEmpty()) {
@@ -81,17 +93,14 @@ public class CommenterActivity extends Activity {
             // Limpe o campo de texto do comentário
             editTextComment.setText("");
 
-            // Salve o comentário no Firebase Database
-            postRef.push().setValue(comment, new DatabaseReference.CompletionListener() {
-                @Override
-                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    if (databaseError == null) {
-                        showToast("Comentário adicionado com sucesso");
-                    } else {
-                        showToast("Falha ao adicionar o comentário");
-                    }
-                }
-            });
+            // Crie um objeto Map para representar os dados do comentário
+            Map<String, Object> commentData = new HashMap<>();
+            commentData.put("comment", comment);
+
+            // Salve o comentário no Cloud Firestore
+            commentsRef.add(commentData)
+                    .addOnSuccessListener(documentReference -> showToast("Comentário adicionado com sucesso"))
+                    .addOnFailureListener(e -> showToast("Falha ao adicionar o comentário"));
         } else {
             showToast("Digite um comentário válido");
         }
@@ -107,70 +116,46 @@ public class CommenterActivity extends Activity {
             // Notifique o adaptador de que os dados foram alterados
             commentAdapter.notifyDataSetChanged();
 
-            // Encontre a chave do comentário no Firebase Database
-            findCommentKey(comment, new CommentKeyCallback() {
-                @Override
-                public void onCommentKeyFound(String commentKey) {
-                    // Remova o comentário do Firebase Database
-                    postRef.child(commentKey).removeValue(new DatabaseReference.CompletionListener() {
-                        @Override
-                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                            if (databaseError == null) {
-                                showToast("Comentário excluído com sucesso");
-                            } else {
-                                showToast("Falha ao excluir o comentário");
-                            }
-                        }
-                    });
-                }
+            // Encontre o documento do comentário no Cloud Firestore
+            Query query = commentsRef.whereEqualTo("comment", comment).limit(1);
+            query.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (!querySnapshot.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
+                        String commentKey = documentSnapshot.getId();
 
-                @Override
-                public void onCommentKeyNotFound() {
+                        // Remova o comentário do Cloud Firestore
+                        commentsRef.document(commentKey)
+                                .delete()
+                                .addOnSuccessListener(aVoid -> showToast("Comentário excluído com sucesso"))
+                                .addOnFailureListener(e -> showToast("Falha ao excluir o comentário"));
+                    } else {
+                        showToast("Falha ao excluir o comentário");
+                    }
+                } else {
                     showToast("Falha ao excluir o comentário");
                 }
-            });
+            }).addOnFailureListener(e -> showToast("Falha ao excluir o comentário"));
         }
     }
 
-    private void findCommentKey(String comment, CommentKeyCallback callback) {
-        postRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot commentSnapshot : dataSnapshot.getChildren()) {
-                    String key = commentSnapshot.getKey();
-                    String value = commentSnapshot.getValue(String.class);
-                    if (value != null && value.equals(comment)) {
-                        // A chave do comentário foi encontrada, chame o método onCommentKeyFound
-                        callback.onCommentKeyFound(key);
-                        return;
+    private void loadComments() {
+        commentsListener = commentsRef.addSnapshotListener(this, (querySnapshot, e) -> {
+            if (e != null) {
+                showToast("Falha ao carregar os comentários");
+                return;
+            }
+
+            if (querySnapshot != null) {
+                commentList.clear();
+                for (DocumentSnapshot documentSnapshot : querySnapshot) {
+                    String comment = documentSnapshot.getString("comment");
+                    if (comment != null) {
+                        commentList.add(comment);
                     }
                 }
-                // A chave do comentário não foi encontrada, chame o método onCommentKeyNotFound
-                callback.onCommentKeyNotFound();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                showToast("Falha ao excluir o comentário");
-            }
-        });
-    }
-
-    private void loadComments() {
-        postRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                commentList.clear();
-                for (DataSnapshot commentSnapshot : dataSnapshot.getChildren()) {
-                    String comment = commentSnapshot.getValue(String.class);
-                    commentList.add(comment);
-                }
                 commentAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                showToast("Falha ao carregar os comentários");
             }
         });
     }

@@ -14,7 +14,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuth.AuthStateListener;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends Activity {
@@ -24,7 +23,7 @@ public class MainActivity extends Activity {
     private Button buttonLogin;
     private Button buttonCreateAccount;
     private FirebaseAuth mAuth;
-    private AuthStateListener mAuthListener;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +55,7 @@ public class MainActivity extends Activity {
         });
 
         // Configurar o listener de autenticação do Firebase
-        mAuthListener = new AuthStateListener() {
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();

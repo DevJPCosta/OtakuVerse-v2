@@ -3,49 +3,50 @@ package com.example.myapp;
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.myapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 
 public class UserProfileActivity extends Activity {
+
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private ListenerRegistration userListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
         // Obter dados do perfil do usuário
         getUserProfile();
     }
 
     private void getUserProfile() {
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        if (firebaseUser != null) {
-            String userId = firebaseUser.getUid();
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            userListener = db.collection("users").document(userId)
+                    .addSnapshotListener((snapshot, exception) -> {
+                        if (exception != null) {
+                            showToast("Falha ao obter perfil do usuário");
+                            return;
+                        }
 
-            userRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
-                        displayUserProfile(userProfile);
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // Tratar erros de leitura do banco de dados, se necessário
-                }
-            });
+                        if (snapshot != null && snapshot.exists()) {
+                            UserProfile userProfile = snapshot.toObject(UserProfile.class);
+                            displayUserProfile(userProfile);
+                        }
+                    });
         }
     }
 
@@ -57,11 +58,25 @@ public class UserProfileActivity extends Activity {
         TextView textViewLocation = findViewById(R.id.textViewLocation);
         // ...
 
-        textViewName.setText(userProfile.getName());
-        textViewEmail.setText(userProfile.getEmail());
-        textViewAge.setText(String.valueOf(userProfile.getAge()));
-        textViewBio.setText(userProfile.getBio());
-        textViewLocation.setText(userProfile.getLocation());
-        // ...
+        if (userProfile != null) {
+            textViewName.setText(userProfile.getName());
+            textViewEmail.setText(userProfile.getEmail());
+            textViewAge.setText(String.valueOf(userProfile.getAge()));
+            textViewBio.setText(userProfile.getBio());
+            textViewLocation.setText(userProfile.getLocation());
+            // ...
+        }
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (userListener != null) {
+            userListener.remove();
+        }
     }
 }

@@ -1,34 +1,33 @@
 {
   "project_info": {
-    "project_number": "167219514898",
-    "firebase_url": "https://otakuverse-a5274-default-rtdb.firebaseio.com",
-    "project_id": "otakuverse-a5274",
-    "storage_bucket": "otakuverse-a5274.appspot.com"
+    "project_number": "960626183274",
+    "project_id": "otakuversev2",
+    "storage_bucket": "otakuversev2.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:167219514898:android:5de821832b23de97a652cb",
+        "mobilesdk_app_id": "1:960626183274:android:b1a608ef5aeb1916348e13",
         "android_client_info": {
           "package_name": "com.example.myapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "167219514898-7hvg871d9dqi37l5mm7hf1elgb156i8q.apps.googleusercontent.com",
+          "client_id": "960626183274-l81gmmjafr3h8p8smshpqdi9q8u1vh0r.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCbRWcBbCovzhNBcM1EJk4GX1CYa7H0Bdw"
+          "current_key": "AIzaSyAa-H8szdyMX2mpXza9FwyvuB3GnxmszE4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "167219514898-7hvg871d9dqi37l5mm7hf1elgb156i8q.apps.googleusercontent.com",
+              "client_id": "960626183274-l81gmmjafr3h8p8smshpqdi9q8u1vh0r.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

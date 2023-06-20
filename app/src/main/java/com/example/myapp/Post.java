@@ -9,13 +9,13 @@ public class Post {
     private String title;
     private String content;
     private String author;
-    private String authorId; // Adicionado o campo para o ID do autor
+    private String authorId;
     private Date date;
     private List<String> comments;
     private List<String> likes;
     private List<String> dislikes;
     private List<String> discussions;
-    private String description; // Adicionado o campo para a descrição
+    private String description;
 
     public Post() {
         // Construtor vazio necessário para o Firebase Firestore
@@ -130,7 +130,7 @@ public class Post {
         post.setLikes((List<String>) document.get("likes"));
         post.setDislikes((List<String>) document.get("dislikes"));
         post.setDiscussions((List<String>) document.get("discussions"));
-        post.setDescription(document.getString("description")); // Atribuir o valor do campo "description"
+        post.setDescription(document.getString("description"));
         return post;
     }
 }

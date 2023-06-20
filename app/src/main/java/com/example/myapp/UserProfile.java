@@ -43,6 +43,10 @@ public class UserProfile {
         return interests;
     }
 
-    // Outros métodos e funcionalidades do perfil de usuário, como setters, validações, etc.
-}
+    // Implemente os métodos e funcionalidades adicionais do perfil de usuário, como setters, validações, etc.
 
+    // Exemplo de método para verificar se o usuário é maior de idade
+    public boolean isAdult() {
+        return age >= 18;
+    }
+}

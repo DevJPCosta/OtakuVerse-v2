@@ -8,11 +8,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.ListenerRegistration;
 
 public class PostActivity extends Activity {
 
@@ -20,7 +20,8 @@ public class PostActivity extends Activity {
     private TextView textViewPostContent;
     private TextView textViewPostAuthor;
 
-    private DatabaseReference postRef;
+    private FirebaseFirestore db;
+    private ListenerRegistration postListener;
     private String postId;
 
     private Button buttonDelete;
@@ -40,43 +41,43 @@ public class PostActivity extends Activity {
 
         postId = getIntent().getStringExtra("postId");
 
-        postRef = FirebaseDatabase.getInstance().getReference("posts").child(postId);
+        db = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build();
+        db.setFirestoreSettings(settings);
 
-        postRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    String title = dataSnapshot.child("title").getValue(String.class);
-                    String content = dataSnapshot.child("content").getValue(String.class);
-                    String author = dataSnapshot.child("author").getValue(String.class);
+        postListener = db.collection("posts").document(postId)
+                .addSnapshotListener(this, (documentSnapshot, e) -> {
+                    if (e != null) {
+                        exibirMensagemDeErro();
+                        return;
+                    }
 
-                    textViewPostTitle.setText(title);
-                    textViewPostContent.setText(content);
-                    textViewPostAuthor.setText(author);
-                } else {
-                    exibirMensagemDeErro();
-                }
-            }
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
+                        String title = documentSnapshot.getString("title");
+                        String content = documentSnapshot.getString("content");
+                        String author = documentSnapshot.getString("author");
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                exibirMensagemDeErro();
-            }
-        });
+                        textViewPostTitle.setText(title);
+                        textViewPostContent.setText(content);
+                        textViewPostAuthor.setText(author);
+                    } else {
+                        exibirMensagemDeErro();
+                    }
+                });
 
-        buttonDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deletePost();
-            }
-        });
+        buttonDelete.setOnClickListener(v -> deletePost());
 
-        buttonComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openCommentActivity();
-            }
-        });
+        buttonComment.setOnClickListener(v -> openCommentActivity());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (postListener != null) {
+            postListener.remove();
+        }
     }
 
     private void exibirMensagemDeErro() {
@@ -84,17 +85,16 @@ public class PostActivity extends Activity {
     }
 
     private void deletePost() {
-        postRef.removeValue(new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if (databaseError == null) {
-                    showToast("Postagem excluída com sucesso");
-                    finish();
-                } else {
-                    showToast("Falha ao excluir a postagem: " + databaseError.getMessage());
-                }
-            }
-        });
+        db.collection("posts").document(postId)
+                .delete()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        showToast("Postagem excluída com sucesso");
+                        finish();
+                    } else {
+                        showToast("Falha ao excluir a postagem: " + task.getException().getMessage());
+                    }
+                });
     }
 
     private void openCommentActivity() {
