@@ -10,14 +10,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.List;
+import com.example.myapp.Comment;
+import com.example.myapp.R;
 
-public class CommentAdapter extends ArrayAdapter<String> {
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Locale;
+
+public class CommentAdapter extends ArrayAdapter<Comment> {
 
     private final Context context;
-    private final List<String> commentList;
+    private final List<Comment> commentList;
 
-    public CommentAdapter(Context context, List<String> commentList) {
+    public CommentAdapter(Context context, List<Comment> commentList) {
         super(context, 0, commentList);
         this.context = context;
         this.commentList = commentList;
@@ -32,13 +38,21 @@ public class CommentAdapter extends ArrayAdapter<String> {
         }
 
         // Obtenha o comentário atual
-        String currentComment = commentList.get(position);
+        Comment currentComment = commentList.get(position);
 
         // Configure a view do item de comentário com os dados do comentário
         TextView textViewCommentContent = itemView.findViewById(R.id.textViewCommentContent);
-        textViewCommentContent.setText(currentComment);
+        TextView textViewCommentAuthor = itemView.findViewById(R.id.textViewCommentAuthor);
+        TextView textViewCommentDatetime = itemView.findViewById(R.id.textViewCommentDatetime);
+
+        textViewCommentContent.setText(currentComment.getContent());
+        textViewCommentAuthor.setText(currentComment.getAuthor());
+
+        String formattedDatetime = currentComment.getDatetime() != null
+                ? DateFormat.getDateTimeInstance().format(currentComment.getDatetime())
+                : "Data desconhecida";
+        textViewCommentDatetime.setText(formattedDatetime);
 
         return itemView;
     }
-
 }
