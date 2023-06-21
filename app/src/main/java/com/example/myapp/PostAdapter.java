@@ -17,9 +17,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -51,8 +53,6 @@ public class PostAdapter extends ArrayAdapter<Post> {
             holder.textViewContent = convertView.findViewById(R.id.textViewContent);
             holder.textViewAuthor = convertView.findViewById(R.id.textViewAuthor);
             holder.textViewDate = convertView.findViewById(R.id.textViewDate);
-            holder.textViewLikes = convertView.findViewById(R.id.textViewLikes);
-            holder.textViewDislikes = convertView.findViewById(R.id.textViewDislikes);
             holder.buttonComment = convertView.findViewById(R.id.buttonComment);
             holder.listViewComments = convertView.findViewById(R.id.listViewComments);
             holder.buttonDelete = convertView.findViewById(R.id.buttonDelete);
@@ -77,25 +77,6 @@ public class PostAdapter extends ArrayAdapter<Post> {
         if (holder.textViewDate != null) {
             holder.textViewDate.setText(formatDate(currentPost.getDate()));
         }
-        if (holder.textViewLikes != null) {
-            holder.textViewLikes.setText(currentPost.getLikes().size() + " curtidas");
-        }
-        if (holder.textViewDislikes != null) {
-            holder.textViewDislikes.setText(currentPost.getDislikes().size() + " descurtidas");
-        }
-
-        // Configure o adaptador do ListView de comentários
-        if (holder.listViewComments != null && currentPost.getComments() != null) {
-            CommentAdapter commentAdapter = new CommentAdapter(context, currentPost.getComments());
-            holder.listViewComments.setAdapter(commentAdapter);
-
-            // Defina o tamanho máximo de exibição dos itens do ListView de comentários
-            int desiredItemHeight = context.getResources().getDimensionPixelSize(R.dimen.comment_item_height);
-            int totalHeight = desiredItemHeight * currentPost.getComments().size();
-            ViewGroup.LayoutParams layoutParams = holder.listViewComments.getLayoutParams();
-            layoutParams.height = totalHeight;
-            holder.listViewComments.setLayoutParams(layoutParams);
-        }
 
         // Verifica se o autor do post é o mesmo que o usuário atualmente logado
         String currentUserId = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid();
@@ -117,40 +98,50 @@ public class PostAdapter extends ArrayAdapter<Post> {
             }
         });
 
-        // Restante do código...
+        // Obtém os comentários do post
+        List<String> commentIds = currentPost.getCommentIds();
+        if (commentIds != null && commentIds.size() > 0) {
+            // Obtém os objetos Comment correspondentes aos IDs dos comentários
+            getComments(commentIds, holder.listViewComments);
+        }
 
         return convertView;
     }
 
-    private void deletePost(Post post) {
-        // Remove o post da lista de posts
-        postList.remove(post);
-        notifyDataSetChanged();
-
-        // Obtém a referência do documento do post no Firestore
-        DocumentReference postRef = firestore.collection("posts").document(post.getPostId());
-
-        // Exclui o documento do post
-        postRef.delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // Sucesso ao excluir o post
-                        Toast.makeText(context, "Post excluído com sucesso", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Falha ao excluir o post
-                        Toast.makeText(context, "Falha ao excluir o post", Toast.LENGTH_SHORT).show();
-                    }
-                });
+    private String formatDate(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+        return dateFormat.format(date);
     }
 
-    private String formatDate(Date date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        return dateFormat.format(date);
+    private void deletePost(Post post) {
+        // TODO: Implementar a exclusão do post no Firestore
+    }
+
+    private void getComments(List<String> commentIds, ListView listViewComments) {
+        List<Comment> commentList = new ArrayList<>();
+        for (String commentId : commentIds) {
+            DocumentReference commentRef = firestore.collection("comments").document(commentId);
+            commentRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.exists()) {
+                        // Converte o documento em um objeto Comment
+                        Comment comment = documentSnapshot.toObject(Comment.class);
+                        if (comment != null) {
+                            commentList.add(comment);
+                        }
+                    }
+                    // Atualiza o adaptador de comentários
+                    CommentAdapter commentAdapter = new CommentAdapter(context, commentList);
+                    listViewComments.setAdapter(commentAdapter);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(context, "Falha ao obter os comentários.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     private static class ViewHolder {
@@ -158,8 +149,6 @@ public class PostAdapter extends ArrayAdapter<Post> {
         TextView textViewContent;
         TextView textViewAuthor;
         TextView textViewDate;
-        TextView textViewLikes;
-        TextView textViewDislikes;
         Button buttonComment;
         ListView listViewComments;
         Button buttonDelete;

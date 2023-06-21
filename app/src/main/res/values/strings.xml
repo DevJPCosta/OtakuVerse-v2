@@ -31,4 +31,6 @@
     <string name="bio">bio</string>
     <string name="location">location</string>
     <string name="interests">interests</string>
+    <string name="add_comment">Adicionar Comment</string>
+    <string name="comment">comment</string>
 </resources>

@@ -37,7 +37,8 @@
         <!-- Outras atividades aqui -->
 
         <activity
-            android:name=".CommenterActivity" />
+            android:name=".CommenterActivity"
+            android:theme="@style/Theme.AppCompat"/>
 
         <activity
             android:name=".PostAdapter" />

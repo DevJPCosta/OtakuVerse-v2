@@ -1,166 +1,126 @@
 package com.example.myapp;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-public class CommenterActivity extends Activity {
-
+public class CommenterActivity extends AppCompatActivity {
     private EditText editTextComment;
     private Button buttonAddComment;
     private ListView listViewComments;
+    private CommentAdapter commentAdapter;
+    private List<Comment> commentList;
 
     private FirebaseFirestore db;
     private CollectionReference commentsRef;
-    private DocumentReference postRef;
+
     private String postId;
-    private List<String> commentList;
-    private CommentAdapter commentAdapter;
-    private ListenerRegistration commentsListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_commenter);
 
+        // Obtenha o ID do post da atividade anterior
+        postId = getIntent().getStringExtra("postId");
+
+        // Inicialize as instâncias do Firebase Firestore
+        db = FirebaseFirestore.getInstance();
+        commentsRef = db.collection("comments");
+
+        // Inicialize as views
         editTextComment = findViewById(R.id.editTextComment);
         buttonAddComment = findViewById(R.id.buttonAddComment);
         listViewComments = findViewById(R.id.listViewComments);
 
-        postId = getIntent().getStringExtra("postId");
-
-        db = FirebaseFirestore.getInstance();
-        commentsRef = db.collection("posts").document(postId).collection("comments");
-        postRef = db.collection("posts").document(postId);
-
+        // Inicialize a lista de comentários
         commentList = new ArrayList<>();
         commentAdapter = new CommentAdapter(this, commentList);
         listViewComments.setAdapter(commentAdapter);
 
+        // Carregue os comentários existentes
+        loadComments();
+
+        // Defina o clique do botão Adicionar Comentário
         buttonAddComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addComment();
             }
         });
-
-        listViewComments.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                deleteComment(position);
-            }
-        });
-
-        loadComments();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (commentsListener != null) {
-            commentsListener.remove();
-        }
-    }
-
-    private void addComment() {
-        String comment = editTextComment.getText().toString().trim();
-        if (!comment.isEmpty()) {
-            // Adicione o comentário à lista
-            commentList.add(comment);
-
-            // Notifique o adaptador de que os dados foram alterados
-            commentAdapter.notifyDataSetChanged();
-
-            // Limpe o campo de texto do comentário
-            editTextComment.setText("");
-
-            // Crie um objeto Map para representar os dados do comentário
-            Map<String, Object> commentData = new HashMap<>();
-            commentData.put("comment", comment);
-
-            // Salve o comentário no Cloud Firestore
-            commentsRef.add(commentData)
-                    .addOnSuccessListener(documentReference -> showToast("Comentário adicionado com sucesso"))
-                    .addOnFailureListener(e -> showToast("Falha ao adicionar o comentário"));
-        } else {
-            showToast("Digite um comentário válido");
-        }
-    }
-
-    private void deleteComment(int position) {
-        if (position >= 0 && position < commentList.size()) {
-            String comment = commentList.get(position);
-
-            // Remova o comentário da lista
-            commentList.remove(position);
-
-            // Notifique o adaptador de que os dados foram alterados
-            commentAdapter.notifyDataSetChanged();
-
-            // Encontre o documento do comentário no Cloud Firestore
-            Query query = commentsRef.whereEqualTo("comment", comment).limit(1);
-            query.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful() && task.getResult() != null) {
-                    QuerySnapshot querySnapshot = task.getResult();
-                    if (!querySnapshot.isEmpty()) {
-                        DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
-                        String commentKey = documentSnapshot.getId();
-
-                        // Remova o comentário do Cloud Firestore
-                        commentsRef.document(commentKey)
-                                .delete()
-                                .addOnSuccessListener(aVoid -> showToast("Comentário excluído com sucesso"))
-                                .addOnFailureListener(e -> showToast("Falha ao excluir o comentário"));
-                    } else {
-                        showToast("Falha ao excluir o comentário");
-                    }
-                } else {
-                    showToast("Falha ao excluir o comentário");
-                }
-            }).addOnFailureListener(e -> showToast("Falha ao excluir o comentário"));
-        }
     }
 
     private void loadComments() {
-        commentsListener = commentsRef.addSnapshotListener(this, (querySnapshot, e) -> {
-            if (e != null) {
-                showToast("Falha ao carregar os comentários");
-                return;
-            }
+        // Crie a consulta para recuperar os comentários com base no ID do post
+        Query query = commentsRef.whereEqualTo("postId", postId);
 
-            if (querySnapshot != null) {
+        // Execute a consulta
+        query.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // Limpe a lista de comentários
                 commentList.clear();
-                for (DocumentSnapshot documentSnapshot : querySnapshot) {
-                    String comment = documentSnapshot.getString("comment");
-                    if (comment != null) {
-                        commentList.add(comment);
-                    }
+
+                // Adicione os comentários recuperados à lista
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    Comment comment = document.toObject(Comment.class);
+                    commentList.add(comment);
                 }
+
+                // Notifique o adaptador sobre as alterações na lista
                 commentAdapter.notifyDataSetChanged();
+            } else {
+                Toast.makeText(CommenterActivity.this, "Erro ao carregar os comentários.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    private void addComment() {
+        String commentText = editTextComment.getText().toString().trim();
+
+        // Verifique se o campo de comentário não está vazio
+        if (TextUtils.isEmpty(commentText)) {
+            Toast.makeText(this, "Digite um comentário.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String author = "Nome do Autor"; // Substitua pelo nome do autor real
+        Date datetime = new Date(); // Substitua pelo objeto de data e hora real
+
+// Crie um novo objeto de comentário
+        Comment comment = new Comment();
+        comment.setPostId(postId);
+        comment.setContent(commentText);
+        comment.setAuthor(author);
+
+// Adicione o comentário ao Firebase Firestore
+        commentsRef.add(comment)
+                .addOnSuccessListener(documentReference -> {
+                    // Limpe o campo de comentário após adicionar o comentário com sucesso
+                    editTextComment.setText("");
+
+                    // Atualize a lista de comentários
+                    loadComments();
+
+                    Toast.makeText(CommenterActivity.this, "Comentário adicionado com sucesso.", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(CommenterActivity.this, "Erro ao adicionar o comentário.", Toast.LENGTH_SHORT).show();
+                });
     }
 }

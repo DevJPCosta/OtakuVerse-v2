@@ -48,7 +48,7 @@ public class PostActivity extends Activity {
         db.setFirestoreSettings(settings);
 
         postListener = db.collection("posts").document(postId)
-                .addSnapshotListener(this, (documentSnapshot, e) -> {
+                .addSnapshotListener((documentSnapshot, e) -> {
                     if (e != null) {
                         exibirMensagemDeErro();
                         return;

@@ -23,8 +23,8 @@
     <color name="light_purple">#B39DDB</color>
     <color name="edittext_text_color">#8C9EFF</color>
     <color name="edittext_text_hint_color">#B39DDB</color>
-
-    <!-- Cores adicionais para os campos adicionados -->
+    <color name="comment_text_color">#FFFFFF</color>
+    <color name="comment_text_hint_color">#B0BEC5</color>
     <color name="age_text_color">#FFFFFF</color>
     <color name="age_text_hint_color">#B0BEC5</color>
     <color name="bio_text_color">#FFFFFF</color>

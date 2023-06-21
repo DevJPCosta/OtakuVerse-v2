@@ -5,40 +5,56 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.myapp.Comment;
+import com.example.myapp.R;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
-public class CommentAdapter extends ArrayAdapter<String> {
+public class CommentAdapter extends ArrayAdapter<Comment> {
+    private List<Comment> commentList;
 
-    private final Context context;
-    private final List<String> commentList;
-
-    public CommentAdapter(Context context, List<String> commentList) {
+    public CommentAdapter(Context context, List<Comment> commentList) {
         super(context, 0, commentList);
-        this.context = context;
         this.commentList = commentList;
     }
 
-    @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View itemView = convertView;
-        if (itemView == null) {
-            itemView = LayoutInflater.from(context).inflate(R.layout.item_comment, parent, false);
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        if (convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_comment, parent, false);
         }
 
-        // Obtenha o comentário atual
-        String currentComment = commentList.get(position);
+        Comment comment = commentList.get(position);
 
-        // Configure a view do item de comentário com os dados do comentário
-        TextView textViewCommentContent = itemView.findViewById(R.id.textViewCommentContent);
-        textViewCommentContent.setText(currentComment);
+        TextView textViewCommentContent = convertView.findViewById(R.id.textViewCommentContent);
+        TextView textViewCommentAuthor = convertView.findViewById(R.id.textViewCommentAuthor);
+        Button buttonDelete = convertView.findViewById(R.id.buttonDelete);
 
-        return itemView;
+        textViewCommentContent.setText(comment.getContent());
+        textViewCommentAuthor.setText(comment.getAuthor());
+
+        // Adicione um ouvinte de clique para o botão de exclusão
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteComment(position);
+            }
+        });
+
+        return convertView;
     }
 
+    private void deleteComment(int position) {
+        commentList.remove(position);
+        notifyDataSetChanged();
+    }
 }
