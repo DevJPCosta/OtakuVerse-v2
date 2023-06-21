@@ -1,10 +1,12 @@
 package com.example.myapp;
 
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -51,8 +53,8 @@ public class CommenterActivity extends AppCompatActivity {
 
         // Inicialize a lista de comentários
         commentList = new ArrayList<>();
-        commentAdapter = new CommentAdapter(this, commentList);
-        listViewComments.setAdapter(commentAdapter);
+        commentAdapter = new CommentAdapter((Query) commentList);
+        listViewComments.setAdapter((ListAdapter) commentAdapter);
 
         // Carregue os comentários existentes
         loadComments();
@@ -102,13 +104,13 @@ public class CommenterActivity extends AppCompatActivity {
         String author = "Nome do Autor"; // Substitua pelo nome do autor real
         Date datetime = new Date(); // Substitua pelo objeto de data e hora real
 
-// Crie um novo objeto de comentário
+        // Crie um novo objeto de comentário
         Comment comment = new Comment();
         comment.setPostId(postId);
         comment.setContent(commentText);
         comment.setAuthor(author);
 
-// Adicione o comentário ao Firebase Firestore
+        // Adicione o comentário ao Firebase Firestore
         commentsRef.add(comment)
                 .addOnSuccessListener(documentReference -> {
                     // Limpe o campo de comentário após adicionar o comentário com sucesso

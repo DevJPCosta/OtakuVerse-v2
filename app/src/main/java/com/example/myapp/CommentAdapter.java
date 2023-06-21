@@ -1,60 +1,66 @@
 package com.example.myapp;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapp.Comment;
-import com.example.myapp.R;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Locale;
+public class CommentAdapter extends FirestoreAdapter<CommentAdapter.CommentViewHolder, Comment> {
 
-public class CommentAdapter extends ArrayAdapter<Comment> {
-    private List<Comment> commentList;
+    public CommentAdapter(Query query) {
+        super(new FirestoreRecyclerOptions.Builder<Comment>()
+                .setQuery(query, Comment.class)
+                .build());
+    }
 
-    public CommentAdapter(Context context, List<Comment> commentList) {
-        super(context, 0, commentList);
-        this.commentList = commentList;
+    @NonNull
+    @Override
+    public CommentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View view = inflater.inflate(R.layout.item_comment, parent, false);
+        return new CommentViewHolder(view);
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_comment, parent, false);
-        }
+    protected void onBindViewHolder(@NonNull CommentViewHolder holder, int position, @NonNull Comment comment) {
+        String commentContent = comment.getContent();
 
-        Comment comment = commentList.get(position);
+        holder.textViewCommentContent.setText(commentContent);
+        holder.textViewCommentAuthor.setText("Author: Loading...");
 
-        TextView textViewCommentContent = convertView.findViewById(R.id.textViewCommentContent);
-        TextView textViewCommentAuthor = convertView.findViewById(R.id.textViewCommentAuthor);
-        Button buttonDelete = convertView.findViewById(R.id.buttonDelete);
-
-        textViewCommentContent.setText(comment.getContent());
-        textViewCommentAuthor.setText(comment.getAuthor());
-
-        // Adicione um ouvinte de clique para o botão de exclusão
-        buttonDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteComment(position);
-            }
-        });
-
-        return convertView;
+        // Recuperar informações do autor do comentário do Firestore
+        String authorId = comment.getAuthorId();
+        FirebaseFirestore.getInstance().collection("users").document(authorId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String authorName = documentSnapshot.getString("name");
+                        holder.textViewCommentAuthor.setText("Author: " + authorName);
+                    } else {
+                        holder.textViewCommentAuthor.setText("Author: Unknown");
+                    }
+                });
     }
 
-    private void deleteComment(int position) {
-        commentList.remove(position);
-        notifyDataSetChanged();
+    static class CommentViewHolder extends RecyclerView.ViewHolder {
+        TextView textViewCommentContent;
+        TextView textViewCommentAuthor;
+        Button buttonDelete;
+
+        CommentViewHolder(View itemView) {
+            super(itemView);
+            textViewCommentContent = itemView.findViewById(R.id.textViewCommentContent);
+            textViewCommentAuthor = itemView.findViewById(R.id.textViewCommentAuthor);
+            buttonDelete = itemView.findViewById(R.id.buttonDelete);
+        }
     }
 }

@@ -135,7 +135,7 @@ public class FeedActivity extends ListActivity {
     private static class ViewHolder {
         TextView textViewTitle;
         TextView textViewContent;
-        TextView textViewAuthor;
+        TextView textViewPostAuthor;
         TextView textViewDate;
         TextView textViewLikes;
         TextView textViewDislikes;
@@ -160,7 +160,7 @@ public class FeedActivity extends ListActivity {
                 holder = new ViewHolder();
                 holder.textViewTitle = convertView.findViewById(R.id.textViewTitle);
                 holder.textViewContent = convertView.findViewById(R.id.textViewContent);
-                holder.textViewAuthor = convertView.findViewById(R.id.textViewAuthor);
+                holder.textViewPostAuthor = convertView.findViewById(R.id.textViewPostAuthor);
                 holder.textViewDate = convertView.findViewById(R.id.textViewDate);
                 holder.textViewLikes = convertView.findViewById(R.id.textViewLikes);
                 holder.textViewDislikes = convertView.findViewById(R.id.textViewDislikes);
@@ -178,7 +178,7 @@ public class FeedActivity extends ListActivity {
             if (post != null) {
                 holder.textViewTitle.setText(post.getTitle());
                 holder.textViewContent.setText(post.getContent());
-                holder.textViewAuthor.setText(post.getAuthor());
+                holder.textViewPostAuthor.setText(post.getAuthor());
 
                 // Verifica se a data não é nula antes de chamá-la
                 if (post.getDate() != null) {
