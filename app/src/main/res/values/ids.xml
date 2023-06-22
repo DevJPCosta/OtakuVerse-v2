@@ -11,10 +11,6 @@
     <item name="listViewComments" type="id">@+id/listViewComments</item>
     <item name="listView" type="id">@+id/listView</item>
     <item name="buttonDelete" type="id">@+id/buttonDelete</item>
-    <item name="textViewCommentAuthor" type="id">@+id/textViewCommentAuthor</item>
-    <item name="textViewCommentDatetime" type="id">@+id/textViewCommentDatetime</item>
-    <item name="textViewTitle" type="id">@+id/textViewTitle</item>
-    <item name="textViewContent" type="id">@+id/textViewContent</item>
-    <item name="textViewAuthor" type="id">@+id/textViewAuthor</item>
-    <item name="textViewDate" type="id">@+id/textViewDate</item>
+    <item name="textViewCommentAuthor" type="id">@id/textViewCommentAuthor</item>
+    <item name="textViewCommentDatetime" type="id">@id/textViewCommentDatetime</item>
 </resources>
