@@ -33,4 +33,10 @@
     <string name="interests">interests</string>
     <string name="add_comment">Adicionar Comment</string>
     <string name="comment">comment</string>
+    <string name="meu_perfil">Meu Perfil</string>
+    <string name="feed" />
+    <string name="create_post" />
+    <string name="profile" />
+    <string name="user_email">User Email</string>
+    <string name="enter_post_content">Enter Post Content</string>
 </resources>

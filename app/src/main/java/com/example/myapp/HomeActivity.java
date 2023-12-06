@@ -8,11 +8,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ImageButton;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
@@ -24,8 +24,9 @@ public class HomeActivity extends Activity {
     private TextView textViewUserEmail;
     private Button buttonLogout;
     private EditText editTextPost;
-    private Button buttonCreatePost;
-    private Button buttonViewFeed; // Botão para visualizar o feed
+    private ImageButton buttonCreatePost;
+    private ImageButton buttonFeed;
+    private ImageButton buttonProfile;
 
     private FirebaseFirestore db;
     private CollectionReference postsRef;
@@ -39,8 +40,9 @@ public class HomeActivity extends Activity {
         textViewUserEmail = findViewById(R.id.textViewUserEmail);
         buttonLogout = findViewById(R.id.buttonLogout);
         editTextPost = findViewById(R.id.editTextPost);
+        buttonFeed = findViewById(R.id.buttonFeed);
         buttonCreatePost = findViewById(R.id.buttonCreatePost);
-        buttonViewFeed = findViewById(R.id.buttonViewFeed); // Referência ao botão "Ver Feed" no layout
+        buttonProfile = findViewById(R.id.buttonProfile);;
 
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,11 +58,17 @@ public class HomeActivity extends Activity {
             }
         });
 
-        // Configurar o clique do botão "Ver Feed" para abrir a FeedActivity
-        buttonViewFeed.setOnClickListener(new View.OnClickListener() {
+        buttonFeed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 redirectToFeedActivity();
+            }
+        });
+
+        buttonProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectToUserProfile();
             }
         });
 
@@ -87,6 +95,10 @@ public class HomeActivity extends Activity {
 
     private void redirectToFeedActivity() {
         startActivity(new Intent(HomeActivity.this, FeedActivity.class));
+    }
+
+    private void redirectToUserProfile() {
+        startActivity(new Intent(HomeActivity.this, UserProfileActivity.class));
     }
 
     private void createPost() {

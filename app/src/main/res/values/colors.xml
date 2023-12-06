@@ -1,26 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Cores de fundo -->
     <color name="background_color">#311B92</color>
+
+    <!-- Cores de texto -->
     <color name="name_text_color">#FFFFFF</color>
     <color name="name_text_hint_color">#B39DDB</color>
     <color name="email_text_color">#FFFFFF</color>
     <color name="email_text_hint_color">#B0BEC5</color>
     <color name="password_text_color">#E1BEE7</color>
     <color name="password_text_hint_color">#E1BEE7</color>
-    <color name="edittext_background_tint">#8C9EFF</color>
-    <color name="button_text_color">#FFFFFF</color>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="pink">#BA68C8</color>
-    <color name="light_blue">#B388FF</color>
-    <color name="blue">#2196F3</color>
-    <color name="light_gray">#E0E0E0</color>
-    <color name="light_purple">#B39DDB</color>
     <color name="edittext_text_color">#8C9EFF</color>
     <color name="edittext_text_hint_color">#B39DDB</color>
     <color name="comment_text_color">#FFFFFF</color>
@@ -33,4 +22,27 @@
     <color name="location_text_hint_color">#B0BEC5</color>
     <color name="interests_text_color">#FFFFFF</color>
     <color name="interests_text_hint_color">#B0BEC5</color>
+
+    <!-- Cores de botões -->
+    <color name="button_text_color">#FFFFFF</color>
+    <color name="button_color">#FFBB86FC</color>
+
+    <!-- Cores de ícones -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="pink">#BA68C8</color>
+    <color name="light_blue">#B388FF</color>
+    <color name="blue">#2196F3</color>
+    <color name="light_gray">#E0E0E0</color>
+    <color name="light_purple">#B39DDB</color>
+    <color name="nav_bar_color">#2196F3</color>
+
+    <color name="edittext_background_tint">#B39DDB</color>
+
+
 </resources>
